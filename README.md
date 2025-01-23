@@ -4,7 +4,7 @@ This scraper allows you to download both TikTok videos and slides without an off
 
 # Usage
 ## Scrape a single video or slide
-Um metadaten und Inhalt eines Videos zu scrapen, wird die TikTok ID benötigt. Diese findet man in der URL eines videos. 
+To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7365430669880724769 to scrape the associated video.
 ```python
 from TT_Scraper import TT_Scraper
 
@@ -12,7 +12,7 @@ from TT_Scraper import TT_Scraper
 tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
 
 # Download all metadata as a .json and all content as .mp4/.jpeg
-tt.scrape(id = 7365430669880724769, scrape_content = True,
+tt.scrape(id = 7365430669880724769, scrape_content = True)
 ```
 
 ## Scrape multiple videos and slides
