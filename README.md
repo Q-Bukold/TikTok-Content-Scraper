@@ -50,7 +50,7 @@ ETA (current queue): 5 days, 10:23:19
 ```
 
 # Advanced Usage
-## Alternatives to downloading the data
+## Alternatives to saving the data on the drive
 The scraper can download metadata and content (video file, images) as well as return them as variables. The metadata is returned as a dictionary or saved as .json and the content is saved as .mp4 / .jpeg or returned in raw form. The raw form can be stored with a simple file.write(). In each case remember the rule: what is not downloaded is returned.
 ```python
 from TT_Scraper import TT_Scraper
@@ -80,7 +80,7 @@ metadata = tt.scrape(
 					download_content = True)
 ```
 
-## Alternatives to downloading the data II: .scrape_list() 
+## Alternatives to saving the data on the drive II: .scrape_list() 
 Changing the output of scrape_list() is a bit more difficult, but can be achieved by overwriting a function called \_download_data() that is part of the TT_Scraper class. To overwrite the function, one must inherit the class. The variable "metadata_batch" is a list of dictionaries, each containing all the metadata of a video/slide as well as the binary content of a video/slide. 
 
 Let's save the content, but insert the metadata into a database:
