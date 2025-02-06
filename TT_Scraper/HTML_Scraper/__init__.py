@@ -10,11 +10,16 @@ import time
 import statistics
 import traceback
 from pprint import pprint
+from pathlib import Path
 
 class HTML_Scraper:
         def __init__(self,
                     wait_time = 0.35,
                     output_files_fp = "data/"):
+            
+            # output folder
+            Path("data/").mkdir(parents=True, exist_ok=True)
+
         
             # constants
             self.IST = pytz.timezone('Europe/Berlin')

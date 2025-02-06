@@ -10,7 +10,7 @@ from ._exceptions_custom import *
 from .HTML_Scraper import HTML_Scraper
 
 class TT_Scraper(HTML_Scraper):
-    def __init__(self, wait_time = 0.35, output_files_fp = "tmp/"):
+    def __init__(self, wait_time = 0.35, output_files_fp = "data/"):
         super().__init__(wait_time, output_files_fp)
     
     from ._scrape_video import _scrape_video

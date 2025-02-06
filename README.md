@@ -9,7 +9,7 @@ To scrape the metadata and content of a video, the TikTok ID is required. It can
 from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
+tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
 
 # Download all metadata as a .json and all content as .mp4/.jpeg
 tt.scrape(id = 7365430669880724769, scrape_content = True)
@@ -20,7 +20,7 @@ tt.scrape(id = 7365430669880724769, scrape_content = True)
 from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
+tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
 
 # Define list of TikTok ids (ids can be string or integer) 
 data = pd.read_csv("data/seedlist.csv")
@@ -56,7 +56,7 @@ The scraper can download metadata and content (video file, images) as well as re
 from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
+tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
 
 # Downloading Everything
 tt.scrape(
@@ -89,7 +89,7 @@ from TT_Scraper import TT_Scraper
 
 # create a new class, that inherits the TT_Scraper
 class TT_Scraper_DB(TT_Scraper):
-	def __init__(self, wait_time = 0.35, output_files_fp = "tmp/"):
+	def __init__(self, wait_time = 0.35, output_files_fp = "data/"):
 		super().__init__(wait_time, output_files_fp)
 
 	# overwriting download_data function to upsert metadata into database
@@ -106,6 +106,6 @@ class TT_Scraper_DB(TT_Scraper):
 		...
 		return None
 
-tt = TT_Scraper_DB(wait_time = 0.35, output_files_fp = "tmp/")
+tt = TT_Scraper_DB(wait_time = 0.35, output_files_fp = "data/")
 tt.scrape_list(my_list)
 ```
