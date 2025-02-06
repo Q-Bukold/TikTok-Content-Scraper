@@ -24,7 +24,7 @@ def _download_data(self, metadata_batch, download_metadata = True, download_cont
     return None
 
 def write_metadata_package(self, filepath_name, metadata_package):
-    filepath_name = f"{filepath_name}tiktok_metadata_{metadata_package["video_metadata"]["id"]}.json"
+    filepath_name = "{filepath_name}tiktok_metadata_{metadata}.json".format(filepath_name=filepath_name, metadata=metadata_package["video_metadata"]["id"])
     with open(filepath_name, "w", encoding="utf-8") as f:
         json.dump(metadata_package, f, ensure_ascii=False, indent=4)
     self.log.info(f"--> JSON saved to {filepath_name}")
