@@ -30,10 +30,8 @@ my_list = data["ids"].tolist()
 tt.scrape_list(scrape_list = my_list, scrape_content = True, batch_size = None, pretty_output = True)
 ```
 
-The scrape_list function provides an useful overview over your progress. Enable "pretty_output" to clear the output in terminal.
-
+The scrape_list function provides an useful overview over your progress. Enable "pretty_output" to clear the output in terminal after every scrape.
 > Caution the pretty_output function does not work on Windows machines.
-
 
 ```
 Queue Information:
@@ -50,7 +48,7 @@ ETA (current queue): 5 days, 10:23:19
 ```
 
 # Advanced Usage
-## Alternatives to saving the data on the drive
+## Alternatives to saving the data on drive
 The scraper can download metadata and content (video file, images) as well as return them as variables. The metadata is returned as a dictionary or saved as .json and the content is saved as .mp4 / .jpeg or returned in raw form. The raw form can be stored with a simple file.write(). In each case remember the rule: what is not downloaded is returned.
 ```python
 from TT_Scraper import TT_Scraper
