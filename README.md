@@ -6,7 +6,7 @@ This scraper allows you to download both TikTok videos and slides without an off
 ## Scrape a single video or slide
 To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7365430669880724769 to scrape the associated video. In examples/ you can see what a potential output to output_files_fp="/tmp" could look like.
 ```python
-from TikTok-Content-Scraper import TT_Scraper
+from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
 tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
@@ -17,7 +17,7 @@ tt.scrape(id = 7365430669880724769, scrape_content = True)
 
 ## Scrape multiple videos and slides
 ```python
-from TikTok-Content-Scraper import TT_Scraper
+from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
 tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
@@ -53,31 +53,31 @@ ETA (current queue): 5 days, 10:23:19
 ## Alternatives to saving the data on the drive
 The scraper can download metadata and content (video file, images) as well as return them as variables. The metadata is returned as a dictionary or saved as .json and the content is saved as .mp4 / .jpeg or returned in raw form. The raw form can be stored with a simple file.write(). In each case remember the rule: what is not downloaded is returned.
 ```python
-from TikTok-Content-Scraper import TT_Scraper
+from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
 tt = TT_Scraper(wait_time=0.3, output_files_fp="/tmp")
 
 # Downloading Everything
 tt.scrape(
-		id = 7365430669880724769,
-		scrape_content = True,
-		download_metadata = True,
-		download_content = True)
+	id = 7365430669880724769,
+	scrape_content = True,
+	download_metadata = True,
+	download_content = True)
   
 # Returning Everything
 metadata, content = tt.scrape(
-							id = 7365430669880724769,
-							scrape_content = True,
-							download_metadata = False,
-							download_content = False)
+	id = 7365430669880724769,
+	scrape_content = True,
+	download_metadata = False,
+	download_content = False)
   
 # Returning one of the two and downloading the other
 metadata = tt.scrape(
-					id = 7365430669880724769,
-					scrape_content = True,
-					download_metadata = False,
-					download_content = True)
+	id = 7365430669880724769,
+	scrape_content = True,
+	download_metadata = False,
+	download_content = True)
 ```
 
 ## Alternatives to saving the data on the drive II: .scrape_list() 
@@ -85,7 +85,7 @@ Changing the output of scrape_list() is a bit more difficult, but can be achieve
 
 Let's save the content, but insert the metadata into a database:
 ```python
-from TikTok-Content-Scraper import TT_Scraper
+from TT_Scraper import TT_Scraper
 
 # create a new class, that inherits the TT_Scraper
 class TT_Scraper_DB(TT_Scraper):

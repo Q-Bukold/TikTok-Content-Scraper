@@ -14,7 +14,7 @@ from pprint import pprint
 class HTML_Scraper:
         def __init__(self,
                     wait_time = 0.35,
-                    output_files_fp = "tmp/"):
+                    output_files_fp = "data/"):
         
             # constants
             self.IST = pytz.timezone('Europe/Berlin')
