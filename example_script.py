@@ -4,4 +4,4 @@ from TT_Scraper import TT_Scraper
 tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
 
 # Download all metadata as a .json and all content as .mp4/.jpeg
-tt.scrape(id = 7365430669880724769, scrape_content = True)
+tt.scrape(id = 7460303767968156958, scrape_content = True)
