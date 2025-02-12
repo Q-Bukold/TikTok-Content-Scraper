@@ -3,8 +3,14 @@
 This scraper allows you to download both TikTok videos and slides without an official API key. In addition, about 100 metadata about the video, author, music, video file and hashtags can be scraped. The scraper was built as a Python class and can be inherited by a custom parent class. This allows the scraper to be easily connected to a database, for example.
 
 # Usage
+## Setup
+1. Download the latest version of this repository
+2. Open the downloaded folder
+3. Pip install all python libraries listed in requirements.txt
+4. Run the example_script.py or create you own script.
+
 ## Scrape a single video or slide
-To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7365430669880724769 to scrape the associated video. In examples/ you can see what a potential output to output_files_fp="/tmp" could look like.
+To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7365430669880724769 to scrape the associated video. In examples/ you can see what a potential output could look like.
 ```python
 from TT_Scraper import TT_Scraper
 
@@ -16,6 +22,7 @@ tt.scrape(id = 7365430669880724769, scrape_content = True)
 ```
 
 ## Scrape multiple videos and slides
+You can also scrape a list of IDs with the following code. The scraper detects on it's own, if the content is a Slide or Video.
 ```python
 from TT_Scraper import TT_Scraper
 
