@@ -24,6 +24,7 @@ tt.scrape(id = 7460303767968156958, scrape_content = True)
 ## Scrape multiple videos and slides
 You can also scrape a list of IDs with the following code. The scraper detects on it's own, if the content is a Slide or Video.
 ```python
+import pandas as pd
 from TT_Scraper import TT_Scraper
 
 # Configure the scraper, this step is always needed
