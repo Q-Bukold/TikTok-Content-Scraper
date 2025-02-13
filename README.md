@@ -55,6 +55,10 @@ ETA (current queue): 5 days, 10:23:19
 
 ```
 
+# Citation
+Bukold, Q. (2025). TikTok Content Scraper [Computer software]. Weizenbaum Libray. https://www.weizenbaum-library.de/handle/id/814
+
+
 # Advanced Usage
 ## Alternatives to saving the data on drive
 The scraper can download metadata and content (video file, images) as well as return them as variables. The metadata is returned as a dictionary or saved as .json and the content is saved as .mp4 / .jpeg or returned in raw form. The raw form can be stored with a simple file.write(). In each case remember the rule: what is not downloaded is returned.
