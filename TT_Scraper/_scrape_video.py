@@ -4,7 +4,6 @@ import ssl
 
 from ._exceptions_custom import *
 
-
 def _scrape_video(self, metadata):
     # edited version of pyktok.save_tiktok() (https://github.com/dfreelon/pyktok)
 

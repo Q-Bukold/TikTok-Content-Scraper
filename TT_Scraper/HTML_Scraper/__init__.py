@@ -43,10 +43,10 @@ class HTML_Scraper:
             # logging
             self.log = self._innit_logger()
         
-        from ._simulate_browser import _innit_request_headers
-        from ._queue_logging import _logging_queue_progress
-        from ._logging import _innit_logger
-        from ._utils import _clear
+        from ._innit_request_headers import _innit_request_headers
+        from ._logging_queue_progress import _logging_queue_progress
+        from ._innit_logger import _innit_logger
+        from ._clear_console import _clear_console
         
         def info(self):
                 pprint(vars(self))

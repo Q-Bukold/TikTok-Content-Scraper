@@ -17,7 +17,7 @@ class TT_Scraper(HTML_Scraper):
     from ._scrape_picture import _scrape_picture
     from ._filter_tiktok_data import _force_to_int, _prep_hashtags_and_mentions, _filter_tiktok_data
     from ._download_data import _download_data, write_video, write_pictures, write_metadata_package
-    from ._exceptions_handling import _exception_handler
+    from ._exception_handler import _exception_handler
     
     def scrape_list(self, scrape_list : list = None, scrape_content : bool = True, batch_size : int = None, pretty_output = True, total_videos=0, already_scraped_count=0, total_errors=0):
 
