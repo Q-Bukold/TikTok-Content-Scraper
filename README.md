@@ -35,7 +35,7 @@ data = pd.read_csv("data/seedlist.csv")
 my_list = data["ids"].tolist()
 
 # Insert list into scraper
-tt.scrape_list(scrape_list = my_list, scrape_content = True, batch_size = None, clear_console = True)
+tt.scrape_list(ids = my_list, scrape_content = True, batch_size = None, clear_console = True)
 ```
 
 The scrape_list function provides an useful overview over your progress. Enable "clear_console" to clear the output in terminal after every scrape.
