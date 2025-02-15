@@ -18,9 +18,8 @@ class HTML_Scraper:
                     output_files_fp = "data/"):
             
             # output folder
-            Path("data/").mkdir(parents=True, exist_ok=True)
+            Path(output_files_fp).mkdir(parents=True, exist_ok=True)
 
-        
             # constants
             self.IST = pytz.timezone('Europe/Berlin')
             self.ALLOW_REPEATED_ERRORS = 20
