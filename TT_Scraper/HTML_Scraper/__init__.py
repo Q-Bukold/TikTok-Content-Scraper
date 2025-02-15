@@ -38,14 +38,14 @@ class HTML_Scraper:
             self.queue_eta = None
 
             # request headers
-            self._innit_request_headers()
+            self._init_request_headers()
 
             # logging
-            self.log = self._innit_logger()
+            self.log = self._init_logger()
         
-        from ._innit_request_headers import _innit_request_headers
+        from ._init_request_headers import _init_request_headers
         from ._logging_queue_progress import _logging_queue_progress
-        from ._innit_logger import _innit_logger
+        from ._init_logger import _init_logger
         from ._clear_console import _clear_console
         
         def info(self):

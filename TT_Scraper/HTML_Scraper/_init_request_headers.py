@@ -1,7 +1,7 @@
 import requests
 import browser_cookie3
 
-def _innit_request_headers(self):
+def _init_request_headers(self):
     # Request Headers
     self.headers = {'Accept-Encoding': 'gzip, deflate, sdch',
                     'Accept-Language': 'en-US,en;q=0.8',
