@@ -33,7 +33,7 @@ def request_and_retain_cookies(self, url, browser_name=None):
 
     return r
     
-    '''
+    ''' # note for myself ; copied from pyktok
     soup = BeautifulSoup(r.text, "html.parser")
     tt_script = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
     tt_json = json.loads(tt_script.string)
