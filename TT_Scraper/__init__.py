@@ -19,7 +19,7 @@ class TT_Scraper(HTML_Scraper):
     from ._download_data import _download_data, write_video, write_pictures, write_metadata_package
     from ._exception_handler import _exception_handler
     
-    def scrape_list(self, scrape_list : list = None, scrape_content : bool = True, batch_size : int = None, pretty_output = True, total_videos=0, already_scraped_count=0, total_errors=0):
+    def scrape_list(self, scrape_list : list = None, scrape_content : bool = True, batch_size : int = None, clear_console = True, total_videos=0, already_scraped_count=0, total_errors=0):
 
         # initialisation        
         self.queue_length = len(scrape_list)
@@ -76,8 +76,8 @@ class TT_Scraper(HTML_Scraper):
                     sys.exit(0)
                 
                 # end of loop
-                if pretty_output:
-                    self._clear()
+                if clear_console:
+                    self._clear_console()
 
         self._logging_queue_progress()
         if batch_of_metadata:
