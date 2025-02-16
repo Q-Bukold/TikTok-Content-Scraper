@@ -6,4 +6,7 @@ authors:
 title: "TikTok-Content-Scraper"
 version: 1.0
 date-released: 2025-02-12
+identifiers:
+  - type: doi
+    value: https://doi.org/10.34669/WI.RD/4
 url: "https://www.weizenbaum-library.de/handle/id/814"
