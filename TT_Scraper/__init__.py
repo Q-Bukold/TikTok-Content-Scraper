@@ -86,6 +86,9 @@ class TT_Scraper(HTML_Scraper):
         self.log.info("Queue ended.\n")
 
     def scrape(self, id, scrape_content : bool = False, download_metadata = True, download_content = True):
+        """
+        Scrapes a single TikTok video based on its ID.
+        """
         id = str(id)
         try:
             # scraping html data
@@ -130,7 +133,7 @@ class TT_Scraper(HTML_Scraper):
         # handling exceptions        
         except NoDataFromURL:
             error_code = "D"
-            self.log.warning("No data from URL provided")
+            self.log.warning("No data from URL")
             metadata_package = self._exception_handler(id, error_code, "NoDataFromURL")
             content_binary = None
         except ItemInfoError:
@@ -140,6 +143,7 @@ class TT_Scraper(HTML_Scraper):
             content_binary = None
         except VideoNotFoundError:
             error_code="V"
+            self.log.warning("No data from URL")
             metadata_package = self._exception_handler(id, error_code, "VideoNotFoundError")
             content_binary = None
         except OtherError:
