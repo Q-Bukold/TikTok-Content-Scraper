@@ -53,7 +53,7 @@ class HTML_Scraper:
         
         def request_and_retain_cookies(self, url, browser_name=None):
                 if browser_name is not None:
-                        self.cookies = getattr(browser_cookie3,browser_name)(domain_name='www.tiktok.com')
+                        self.cookies = getattr(browser_cookie3,browser_name)(domain_name='www.tiktok.com') #inspired by pyktok
 
                 r = requests.get(url,
                         allow_redirects=False, # may have to set to True
