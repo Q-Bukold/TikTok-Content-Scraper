@@ -111,7 +111,7 @@ class TT_Scraper_DB(TT_Scraper):
 		# downloading content
 		super()._download_data(metadata_batch, download_metadata=False, download_content=True)
 
-	def insert_metadata_to_db(metadat_package)
+	def insert_metadata_to_db(metadata_package)
 		...
 		return None
 
