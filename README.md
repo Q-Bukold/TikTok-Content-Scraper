@@ -56,7 +56,7 @@ ETA (current queue): 5 days, 10:23:19
 ```
 
 # Citation
-Bukold, Q. (2025). TikTok-Content-Scraper (Version 1.0) [Computer software]. https://www.weizenbaum-library.de/handle/id/814
+Bukold, Q. (2025). TikTok Content Scraper (Version 1.0) [Computer software]. Weizenbaum Institute. https://doi.org/10.34669/WI.RD/4
 
 # Advanced Usage
 ## Alternatives to saving the data on drive
