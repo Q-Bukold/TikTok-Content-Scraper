@@ -31,11 +31,11 @@ def _logging_queue_progress(self):
     self.log.info(f"ETA (current queue): {self.queue_eta}\n***\n")
 
     #self.log.info("Disk Information:")
-    #check_disk_usage((self.already_scraped_count + self.iterations), self.mean_iter_time, self.VIDEOS_OUT_FP, stop_at_tb = 0.01)
+    #_check_disk_usage((self.already_scraped_count + self.iterations), self.mean_iter_time, self.VIDEOS_OUT_FP, stop_at_tb = 0.01)
     
     return None
 
-def check_disk_usage(self, scraped_count, iter_time, dir, stop_at_tb = 0, only_videos_in_dir = False):
+def _check_disk_usage(self, scraped_count, iter_time, dir, stop_at_tb = 0, only_videos_in_dir = False):
         stop_at = stop_at_tb #TB left
 
         total, used, free = shutil.disk_usage(dir)

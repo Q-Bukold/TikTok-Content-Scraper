@@ -1,6 +1,6 @@
 import logging
 
-def _innit_logger(self):
+def _init_logger(self):
     
     # name of logger
     log = logging.getLogger("logging")

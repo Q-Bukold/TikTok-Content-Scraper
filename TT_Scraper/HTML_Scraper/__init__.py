@@ -38,18 +38,35 @@ class HTML_Scraper:
             self.queue_eta = None
 
             # request headers
-            self._innit_request_headers()
+            self._init_request_headers()
 
             # logging
-            self.log = self._innit_logger()
+            self.log = self._init_logger()
         
-        from ._simulate_browser import _innit_request_headers, request_and_retain_cookies
-        from ._queue_logging import _logging_queue_progress
-        from ._logging import _innit_logger
-        from ._utils import _clear
+        from ._init_request_headers import _init_request_headers
+        from ._logging_queue_progress import _logging_queue_progress
+        from ._init_logger import _init_logger
+        from ._clear_console import _clear_console
         
         def info(self):
                 pprint(vars(self))
+        
+        def request_and_retain_cookies(self, url, browser_name=None):
+                if browser_name is not None:
+                        self.cookies = getattr(browser_cookie3,browser_name)(domain_name='www.tiktok.com')
+
+                r = requests.get(url,
+                        allow_redirects=False, # may have to set to True
+                        headers=self.headers,
+                        cookies=self.cookies,
+                        timeout=20,
+                        stream=False)
+                
+                # retain any new cookies that got set in this request
+                self.cookies = r.cookies
+
+                return r
+
 
 
         

@@ -17,12 +17,12 @@ class TT_Scraper(HTML_Scraper):
     from ._scrape_picture import _scrape_picture
     from ._filter_tiktok_data import _force_to_int, _prep_hashtags_and_mentions, _filter_tiktok_data
     from ._download_data import _download_data, write_video, write_pictures, write_metadata_package
-    from ._exceptions_handling import _exception_handler
+    from ._exception_handler import _exception_handler
     
-    def scrape_list(self, scrape_list : list = None, scrape_content : bool = True, batch_size : int = None, pretty_output = True, total_videos=0, already_scraped_count=0, total_errors=0):
+    def scrape_list(self, ids : list = None, scrape_content : bool = True, batch_size : int = None, clear_console = True, total_videos=0, already_scraped_count=0, total_errors=0):
 
         # initialisation        
-        self.queue_length = len(scrape_list)
+        self.queue_length = len(ids)
         self.log.info(f"Length of Queue = {str(self.queue_length)}")
 
         if not batch_size:
@@ -35,7 +35,7 @@ class TT_Scraper(HTML_Scraper):
         
         # scrape batches of data
         batch_of_metadata = []
-        for self.iterations, id in enumerate(scrape_list, start=1):
+        for self.iterations, id in enumerate(ids, start=1):
                 # logging
                 start = time.time()
                 self._logging_queue_progress()
@@ -76,8 +76,8 @@ class TT_Scraper(HTML_Scraper):
                     sys.exit(0)
                 
                 # end of loop
-                if pretty_output:
-                    self._clear()
+                if clear_console:
+                    self._clear_console()
 
         self._logging_queue_progress()
         if batch_of_metadata:
@@ -86,6 +86,9 @@ class TT_Scraper(HTML_Scraper):
         self.log.info("Queue ended.\n")
 
     def scrape(self, id, scrape_content : bool = False, download_metadata = True, download_content = True):
+        """
+        Scrapes a single TikTok video based on its ID.
+        """
         id = str(id)
         try:
             # scraping html data
@@ -130,7 +133,7 @@ class TT_Scraper(HTML_Scraper):
         # handling exceptions        
         except NoDataFromURL:
             error_code = "D"
-            self.log.warning("No data from URL provided")
+            self.log.warning("No data from URL")
             metadata_package = self._exception_handler(id, error_code, "NoDataFromURL")
             content_binary = None
         except ItemInfoError:
@@ -140,6 +143,7 @@ class TT_Scraper(HTML_Scraper):
             content_binary = None
         except VideoNotFoundError:
             error_code="V"
+            self.log.warning("No data from URL")
             metadata_package = self._exception_handler(id, error_code, "VideoNotFoundError")
             content_binary = None
         except OtherError:
