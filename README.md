@@ -1,16 +1,37 @@
 # What is it?
 
-This scraper allows you to download both TikTok videos and slides without an official API key. In addition, about 100 metadata about the video, author, music, video file and hashtags can be scraped. The scraper was built as a Python class and can be inherited by a custom parent class. This allows the scraper to be easily connected to a database, for example.
+**This scraper allows you to download both TikTok videos and slides without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. The scraper is built as a Python class and can be inherited by a custom parent class, allowing for easy integration with databases or other systems.**
 
-# Usage
-## Setup
-1. Download the latest version of this repository
-2. Open the downloaded folder
-3. Pip install all python libraries listed in requirements.txt
-4. Run the example_script.py or create you own script.
+## Features
+
+- Download TikTok videos and slides.
+- Scrape extensive metadata.
+- Customizable and extendable via inheritance.
+- Supports batch processing and progress tracking.
+
+## Usage
+
+### Setup
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/Q-Bukold/TikTok-Content-Scraper.git
+   cd TikTok-Content-Scraper
+   ```
+
+2. **Install All Dependencies in the Requirements File**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the Example Script**:
+   ```bash
+   python example_script.py
+   ```
 
 ## Scrape a single video or slide
 To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7460303767968156958 to scrape the associated video. In examples/ you can see what a potential output could look like.
+
 ```python
 from TT_Scraper import TT_Scraper
 
@@ -23,6 +44,7 @@ tt.scrape(id = 7460303767968156958, scrape_content = True)
 
 ## Scrape multiple videos and slides
 You can also scrape a list of IDs with the following code. The scraper detects on it's own, if the content is a Slide or Video.
+
 ```python
 import pandas as pd
 from TT_Scraper import TT_Scraper
@@ -38,8 +60,7 @@ my_list = data["ids"].tolist()
 tt.scrape_list(ids = my_list, scrape_content = True, batch_size = None, clear_console = True)
 ```
 
-The scrape_list function provides an useful overview over your progress. Enable "clear_console" to clear the output in terminal after every scrape.
-> Caution the clear_console function does not work on Windows machines.
+The `scrape_list` function provides a useful overview of your progress. Enable `clear_console` to clear the terminal output after every scrape. Note that `clear_console` does not work on Windows machines.
 
 ```
 Queue Information:
@@ -60,7 +81,8 @@ Bukold, Q. (2025). TikTok-Content-Scraper (Version 1.0) [Computer software]. htt
 
 # Advanced Usage
 ## Alternatives to saving the data on drive
-The scraper can download metadata and content (video file, images) as well as return them as variables. The metadata is returned as a dictionary or saved as .json and the content is saved as .mp4 / .jpeg or returned in raw form. The raw form can be stored with a simple file.write(). In each case remember the rule: what is not downloaded is returned.
+The scraper can download metadata and content (video file, images) as well as return them as variables. Metadata is returned as a dictionary or saved as a `.json` file, and content is saved as `.mp4` / `.jpeg` or returned in raw form. Remember the rule: what is not downloaded is returned.
+
 ```python
 from TT_Scraper import TT_Scraper
 
