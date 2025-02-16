@@ -16,9 +16,3 @@ def _init_request_headers(self):
                     'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:58.0) Gecko/20100101 Firefox/58.0'}
 
     self.cookies = dict()
-    
-    ''' # note for myself ; copied from pyktok
-    soup = BeautifulSoup(r.text, "html.parser")
-    tt_script = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
-    tt_json = json.loads(tt_script.string)
-    '''
