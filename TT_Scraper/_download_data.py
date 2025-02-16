@@ -8,7 +8,7 @@ def _download_data(self, metadata_batch, download_metadata = True, download_cont
         if content_binary and download_content:
             
             # pictures / slides
-            if type(content_binary) is list:
+            if isinstance(content_binary, list):
                 self.write_pictures(content_binary, metadata_package["file_metadata"]["filepath"])
             
             # mp4 video
