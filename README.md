@@ -30,7 +30,7 @@
    ```
 
 ## Scrape a single video or slide
-To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7460303767968156958 to scrape the associated video. In examples/ you can see what a potential output could look like.
+To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7460303767968156958 to scrape the associated video. In the folder `examples/` you can see what a potential output could look like.
 
 ```python
 from TT_Scraper import TT_Scraper
@@ -39,7 +39,8 @@ from TT_Scraper import TT_Scraper
 tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
 
 # Download all metadata as a .json and all content as .mp4/.jpeg
-tt.scrape(id = 7460303767968156958, scrape_content = True)
+tt.scrape(id = 7460303767968156958, scrape_content = True, download_metadata = True, download_content = True)
+
 ```
 
 ## Scrape multiple videos and slides
@@ -112,7 +113,7 @@ metadata = tt.scrape(
 ```
 
 ## Alternatives to saving the data on the drive II: .scrape_list() 
-Changing the output of scrape_list() is a bit more difficult, but can be achieved by overwriting a function called \_download_data() that is part of the TT_Scraper class. To overwrite the function, one must inherit the class. The variable "metadata_batch" is a list of dictionaries, each containing all the metadata of a video/slide as well as the binary content of a video/slide. 
+Changing the output of `scrape_list()` is a bit more difficult, but can be achieved by overwriting a function called `\_download_data()` that is part of the `TT_Scraper` class. To overwrite the function, one must inherit the class. The variable `metadata_batch` is a list of dictionaries, each containing all the metadata of a video/slide as well as the binary content of a video/slide. 
 
 Let's save the content, but insert the metadata into a database:
 ```python
