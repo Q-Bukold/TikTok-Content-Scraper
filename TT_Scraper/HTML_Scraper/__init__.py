@@ -15,7 +15,8 @@ from pathlib import Path
 class HTML_Scraper:
         def __init__(self,
                     wait_time = 0.35,
-                    output_files_fp = "data/"):
+                    output_files_fp = "data/", 
+                    browser_name = None):
             
             # output folder
             Path(output_files_fp).mkdir(parents=True, exist_ok=True)
@@ -36,7 +37,8 @@ class HTML_Scraper:
             self.iter_times = []
             self.mean_iter_time = 0
             self.queue_eta = None
-
+        
+            self.browser_name = browser_name
             # request headers
             self._init_request_headers()
 
@@ -52,8 +54,11 @@ class HTML_Scraper:
                 pprint(vars(self))
         
         def request_and_retain_cookies(self, url, browser_name=None):
+                if browser_name is None:
+                        browser_name = self.browser_name  # Use the stored browser_name if not provided
+
                 if browser_name is not None:
-                        self.cookies = getattr(browser_cookie3,browser_name)(domain_name='www.tiktok.com') #inspired by pyktok
+                        self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
 
                 r = requests.get(url,
                         allow_redirects=False, # may have to set to True

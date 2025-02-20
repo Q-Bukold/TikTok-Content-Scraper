@@ -5,19 +5,24 @@ import json
 from bs4 import BeautifulSoup
 import json
 import time
+import browser_cookie3
 
 from ._exceptions_custom import *
 from .HTML_Scraper import HTML_Scraper
 
 class TT_Scraper(HTML_Scraper):
-    def __init__(self, wait_time = 0.35, output_files_fp = "data/"):
+    def __init__(self, wait_time = 0.35, output_files_fp = "data/", browser_name = None):
         super().__init__(wait_time, output_files_fp)
+        if browser_name:
+            self.cookies = getattr(browser_cookie3, browser_name)(domain_name=".tiktok.com")
     
     from ._scrape_video import _scrape_video
     from ._scrape_picture import _scrape_picture
     from ._filter_tiktok_data import _force_to_int, _prep_hashtags_and_mentions, _filter_tiktok_data
     from ._download_data import _download_data, write_video, write_pictures, write_metadata_package
     from ._exception_handler import _exception_handler
+
+
     
     def scrape_list(self, ids : list = None, scrape_content : bool = True, batch_size : int = None, clear_console = True, total_videos=0, already_scraped_count=0, total_errors=0):
 
