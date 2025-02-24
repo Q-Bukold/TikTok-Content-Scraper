@@ -112,7 +112,7 @@ metadata = tt.scrape(
 	download_content = True)
 ```
 
-## Alternatives to saving the data on the drive II: .scrape_list() 
+## Alternatives to saving the data on the drive II: Overwriting the _download_data function 
 Changing the output of `scrape_list()` is a bit more difficult, but can be achieved by overwriting a function called `\_download_data()` that is part of the `TT_Scraper` class. To overwrite the function, one must inherit the class. The variable `metadata_batch` is a list of dictionaries, each containing all the metadata of a video/slide as well as the binary content of a video/slide. 
 
 Let's save the content, but insert the metadata into a database:
