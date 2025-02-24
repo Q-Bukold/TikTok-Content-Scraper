@@ -115,25 +115,20 @@ class TT_Scraper(HTML_Scraper):
                 self.log.info(f"https://www.tiktok.com/@tiktok/video/{id}")
                 raise NoDataFromURL
             metadata_package = self._filter_tiktok_data(interesting_elements)
+            video_binary = None
+            slide_pictures = None
+            slide_audio = None
+            filepath = f"{self.VIDEOS_OUT_FP}tiktok_{id}_*"
+            metadata_package["file_metadata"]["filepath"] = filepath
 
             # scraping content, if requested by user
             if scrape_content:
-                metadata_package["file_metadata"]["filepath"] = None
-                video_binary = None
-                slide_pictures = None
-                slide_audio = None
 
                 try:
                     video_binary = self._scrape_video(metadata = requested_data_str)
-                    video_fn = f"tiktok_video_{id}_*"
-                    filepath = f"{self.VIDEOS_OUT_FP}{video_fn}"
-                    metadata_package["file_metadata"]["filepath"] = filepath
                     metadata_package["file_metadata"]["is_slide"] = False
                 except VideoIsPicture:
                     slide_pictures, picture_formats, slide_audio = self._scrape_picture(metadata = requested_data_str)
-                    video_fn = f"tiktok_picture_{id}_*"
-                    filepath = f"{self.VIDEOS_OUT_FP}{video_fn}"
-                    metadata_package["file_metadata"]["filepath"] = filepath
                     metadata_package["file_metadata"]["is_slide"] = True
                     metadata_package["file_metadata"]["picture_formats"] = picture_formats
 

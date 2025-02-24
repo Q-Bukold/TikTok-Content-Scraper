@@ -25,13 +25,13 @@ def _download_data(self, metadata_batch, download_metadata = True, download_cont
     return None
 
 def write_metadata_package(self, filepath, metadata_package):
-    filename = filepath.replace("*", ".json")
+    filename = filepath.replace("*", "metadata.json")
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(metadata_package, f, ensure_ascii=False, indent=4)
     self.log.info(f"--> JSON saved to {filename}")
 
 def write_video(self, video_content, filepath):
-    filename = filepath.replace("*", ".mp4")
+    filename = filepath.replace("*", "video.mp4")
     with open(filename, 'wb') as fn:
         fn.write(video_content)
     self.log.info(f"--> MP4  saved to {filename}")
@@ -39,13 +39,13 @@ def write_video(self, video_content, filepath):
 
 def write_pictures(self, slide_pictures, filepath):
     for i, picture in enumerate(slide_pictures):
-        filename = filepath.replace("*", f"{str(i)}.jpeg")
+        filename = filepath.replace("*", f"slide{str(i)}.jpeg")
         with open(filename, 'wb') as f:
             f.write(picture)
         self.log.info(f"--> JPEG saved to {filename}")
 
 def write_slide_audio(self, slide_audio, filepath):
-    filename = filepath.replace("*", ".mp3")
+    filename = filepath.replace("*", "slide_audio.mp3")
     with open(filename, "wb") as f:
         f.write(slide_audio)
     self.log.info(f"--> MP3 saved to {filename}")
