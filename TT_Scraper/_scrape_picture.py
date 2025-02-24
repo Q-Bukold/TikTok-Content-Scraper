@@ -20,7 +20,7 @@ def _scrape_picture(self, metadata):
     else:
         audio_binary: bytes = requests.get(audio_url).content    
     
-    # download pictures
+    # request pictures
     picture_content_binary = (len(metadata_images)) * [None]
     for i in range(len(metadata_images)):
         tt_pic_url = metadata_images[i]["imageURL"]["urlList"][0]
