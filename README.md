@@ -4,7 +4,7 @@
 
 ## Features
 
-- Download TikTok videos and slides.
+- Download TikTok videos (mp4) and slides (jpeg's + mp3).
 - Scrape extensive metadata.
 - Customizable and extendable via inheritance.
 - Supports batch processing and progress tracking.
@@ -30,7 +30,7 @@
    ```
 
 ## Scrape a single video or slide
-To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID 7460303767968156958 to scrape the associated video. In the folder `examples/` you can see what a potential output could look like.
+To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID `7460303767968156958` to scrape the associated video. In the folder `examples/` you can see what a potential output could look like.
 
 ```python
 from TT_Scraper import TT_Scraper
@@ -82,7 +82,7 @@ Bukold, Q. (2025). TikTok Content Scraper (Version 1.0) [Computer software]. Wei
 
 # Advanced Usage
 ## Alternatives to saving the data on drive
-The scraper can download metadata and content (video file, images) as well as return them as variables. Metadata is returned as a dictionary or saved as a `.json` file, and content is saved as `.mp4` / `.jpeg` or returned in raw form. Remember the rule: what is not downloaded is returned.
+The scraper can download metadata and content (video file, images) as well as return them as variables. Metadata is returned as a dictionary or saved as a `.json` file, and content is saved as `.mp4` / `.jpeg` + `.mp3` or returned as an array of binaries. Remember the rule: what is not downloaded is returned.
 
 ```python
 from TT_Scraper import TT_Scraper
