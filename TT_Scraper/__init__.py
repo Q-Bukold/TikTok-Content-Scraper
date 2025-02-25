@@ -19,7 +19,7 @@ class TT_Scraper(HTML_Scraper):
     from ._scrape_video import _scrape_video
     from ._scrape_picture import _scrape_picture
     from ._filter_tiktok_data import _force_to_int, _prep_hashtags_and_mentions, _filter_tiktok_data
-    from ._download_data import _download_data, write_video, write_pictures, write_metadata_package
+    from ._download_data import _download_data, write_video, write_pictures, write_metadata_package, write_slide_audio
     from ._exception_handler import _exception_handler
 
 
@@ -47,8 +47,8 @@ class TT_Scraper(HTML_Scraper):
 
                 # scraping
                 self.log.info(f"-> id {id}")
-                metadata_package, video_content_binary = self.scrape(id=id, scrape_content=scrape_content, download_metadata=False, download_content=False)
-                metadata_package["content_binary"] = video_content_binary
+                metadata_package, content_binary = self.scrape(id=id, scrape_content=scrape_content, download_metadata=False, download_content=False)
+                metadata_package["content_binary"] = content_binary
                 self.repeated_error = 0  
 
                 # save data in memory until stored
@@ -115,25 +115,22 @@ class TT_Scraper(HTML_Scraper):
                 self.log.info(f"https://www.tiktok.com/@tiktok/video/{id}")
                 raise NoDataFromURL
             metadata_package = self._filter_tiktok_data(interesting_elements)
+            video_binary = None
+            slide_pictures = None
+            slide_audio = None
+            filepath = f"{self.VIDEOS_OUT_FP}tiktok_{id}_*"
+            metadata_package["file_metadata"]["filepath"] = filepath
 
             # scraping content, if requested by user
-            if scrape_content == True:
+            if scrape_content:
+
                 try:
-                    content_binary = self._scrape_video(metadata = requested_data_str)
-                    video_fn = f"tiktok_video_{id}.mp4"
-                    filepath = f"{self.VIDEOS_OUT_FP}{video_fn}"
-                    metadata_package["file_metadata"]["filepath"] = filepath
+                    video_binary = self._scrape_video(metadata = requested_data_str)
                     metadata_package["file_metadata"]["is_slide"] = False
                 except VideoIsPicture:
-                    content_binary, picture_formats = self._scrape_picture(metadata = requested_data_str)
-                    video_fn = f"tiktok_picture_{id}_X.jpeg"
-                    filepath = f"{self.VIDEOS_OUT_FP}{video_fn}"
-                    metadata_package["file_metadata"]["filepath"] = filepath
+                    slide_pictures, picture_formats, slide_audio = self._scrape_picture(metadata = requested_data_str)
                     metadata_package["file_metadata"]["is_slide"] = True
                     metadata_package["file_metadata"]["picture_formats"] = picture_formats
-            else:
-                content_binary = None
-                metadata_package["file_metadata"]["filepath"] = None
 
         # handling exceptions        
         except NoDataFromURL:
@@ -166,6 +163,15 @@ class TT_Scraper(HTML_Scraper):
                 self.log.ERROR("too many errors in a row")
                 sys.quit(1)
         
+        
+        # create array of binary content (videos, pictures, music) 
+        if video_binary:
+            content_binary = {"type": "video", "mp4_binary": video_binary}
+        elif slide_pictures:
+            content_binary = {"type": "slide", "slide_pictures": slide_pictures, "slide_audio": slide_audio}
+        else:
+            content_binary = None      
+
         # download or return data
         if download_metadata and download_content:
             metadata_package["content_binary"] = content_binary

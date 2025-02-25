@@ -8,37 +8,44 @@ def _download_data(self, metadata_batch, download_metadata = True, download_cont
         if content_binary and download_content:
             
             # pictures / slides
-            if isinstance(content_binary, list):
-                self.write_pictures(content_binary, metadata_package["file_metadata"]["filepath"])
+            if content_binary["type"] == "slide":
+                self.write_pictures(content_binary["slide_pictures"], metadata_package["file_metadata"]["filepath"])
+                self.write_slide_audio(content_binary["slide_audio"], metadata_package["file_metadata"]["filepath"])
             
-            # mp4 video
-            else:
-                self.write_video(content_binary, metadata_package["file_metadata"]["filepath"])
+            # videos
+            elif content_binary["type"] == "video":
+                self.write_video(content_binary["mp4_binary"], metadata_package["file_metadata"]["filepath"])
 
         # save metadata
         if download_metadata:
-            self.write_metadata_package(self.VIDEOS_OUT_FP, metadata_package)
+            self.write_metadata_package(metadata_package["file_metadata"]["filepath"], metadata_package)
         else:
             return metadata_package
     
     return None
 
-def write_metadata_package(self, filepath_name, metadata_package):
-    filepath_name = "{filepath_name}tiktok_metadata_{metadata}.json".format(filepath_name=filepath_name, metadata=metadata_package["video_metadata"]["id"])
-    with open(filepath_name, "w", encoding="utf-8") as f:
+def write_metadata_package(self, filepath, metadata_package):
+    filename = filepath.replace("*", "metadata.json")
+    with open(filename, "w", encoding="utf-8") as f:
         json.dump(metadata_package, f, ensure_ascii=False, indent=4)
-    self.log.info(f"--> JSON saved to {filepath_name}")
+    self.log.info(f"--> JSON saved to {filename}")
 
-def write_video(self, video_content, filepath_name):
-    with open(filepath_name, 'wb') as fn:
+def write_video(self, video_content, filepath):
+    filename = filepath.replace("*", "video.mp4")
+    with open(filename, 'wb') as fn:
         fn.write(video_content)
-
-    self.log.info(f"--> MP4  saved to {filepath_name}")
+    self.log.info(f"--> MP4  saved to {filename}")
     return None
 
-def write_pictures(self, picture_content_binary_lst, filepath_name):
-    for i, picture_content_binary in enumerate(picture_content_binary_lst):
-        filepath_name_numerated = filepath_name.replace("X", str(i))        
-        with open(filepath_name_numerated, 'wb') as f:
-            f.write(picture_content_binary)
-        self.log.info(f"--> JPEG saved to {filepath_name_numerated}")
+def write_pictures(self, slide_pictures, filepath):
+    for i, picture in enumerate(slide_pictures):
+        filename = filepath.replace("*", f"slide{str(i)}.jpeg")
+        with open(filename, 'wb') as f:
+            f.write(picture)
+        self.log.info(f"--> JPEG saved to {filename}")
+
+def write_slide_audio(self, slide_audio, filepath):
+    filename = filepath.replace("*", "slide_audio.mp3")
+    with open(filename, "wb") as f:
+        f.write(slide_audio)
+    self.log.info(f"--> MP3 saved to {filename}")
