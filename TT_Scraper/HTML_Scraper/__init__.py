@@ -62,7 +62,7 @@ class HTML_Scraper:
 
                 # send HTTP GET request
                 response = requests.get(url,
-                        allow_redirects=False, # may have to set to True
+                        allow_redirects=True,
                         headers=self.headers,
                         cookies=self.cookies,
                         timeout=20,
