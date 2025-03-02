@@ -16,7 +16,6 @@
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/Q-Bukold/TikTok-Content-Scraper.git
-   cd TikTok-Content-Scraper
    ```
 
 2. **Install All Dependencies in the Requirements File**:
@@ -26,7 +25,7 @@
 
 3. **Run the Example Script**:
    ```bash
-   python example_script.py
+   python3 example_script.py
    ```
 
 ## Scrape a single video or slide
