@@ -3,3 +3,7 @@ pandas
 browser_cookie3
 bs4
 requests
+# for database support
+SQLAlchemy
+mysql-connector-python
+psycopg2-binary
