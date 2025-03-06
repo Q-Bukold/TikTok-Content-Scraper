@@ -1,5 +1,8 @@
 # What is it?
 
+This is a modified version of the TikTok-Content-Scraper featuring support for an SQL database integration. Use the .sql script to create your own database. Then add all the relevant video or slide IDs to the scrape_logs table. You can then use the scrape_to_db.py script to select input IDs from the scrape_logs table and insert the scraped metadata into the other tables. In the event of a non-tragic error, an error code will be stored in the scrape_logs table. I know this branch is not very well documented, yet. Please message me in case of any questions.
+
+---
 **This scraper allows you to download both TikTok videos and slides without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. The scraper is built as a Python class and can be inherited by a custom parent class, allowing for easy integration with databases or other systems.**
 
 ## Features
