@@ -135,8 +135,9 @@ class TT_Scraper_DB(TT_Scraper):
 
 def main():
 
+    # specify the database connection in a separate file and import the configs
     from database_url import URL
-    ## database connection
+    ## ... or specify the database connection in this file
     #URL = sqlalchemy.engine.URL.create(
     #    drivername="",
     #    username="",
