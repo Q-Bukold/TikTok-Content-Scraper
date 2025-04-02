@@ -98,14 +98,14 @@ class TT_Scraper(HTML_Scraper):
         try:
             # scraping html data
             requested_data = self.request_and_retain_cookies(f"https://www.tiktok.com/@tiktok/video/{id}")
-            soup = BeautifulSoup(requested_data.text, "html.parser")
-            tt_script = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
+            html_parser = BeautifulSoup(requested_data.text, "html.parser")
+            tt_script = html_parser.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
             try:
                 requested_data_str = json.loads(tt_script.string)
             except AttributeError:
                 raise RetryLaterError
 
-            # filtering html data
+            # filtering GET Request
             if requested_data_str:
                 try:
                     interesting_elements = requested_data_str["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']
