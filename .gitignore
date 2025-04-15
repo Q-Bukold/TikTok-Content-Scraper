@@ -1,7 +1,7 @@
 **/__pycache__/
 .venv
 **.pyc
-data/
+test_data/
 .DS_Store
 *.jpeg
 *.mp3
