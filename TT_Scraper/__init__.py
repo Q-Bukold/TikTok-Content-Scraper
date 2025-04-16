@@ -161,17 +161,17 @@ class TT_Scraper(HTML_Scraper):
         try:
             # scraping html data
             requested_data = self.request_and_retain_cookies(f"https://www.tiktok.com/@tiktok/video/{id}")
-            soup = BeautifulSoup(requested_data.text, "html.parser")
-            tt_script = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
+            html_parser = BeautifulSoup(requested_data.text, "html.parser")
+            rehydration_data = html_parser.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
             try:
-                requested_data_str = json.loads(tt_script.string)
+                rehydration_data_json = json.loads(rehydration_data.string)
             except AttributeError:
                 raise RetryLaterError
 
             # filtering html data
-            if requested_data_str:
+            if rehydration_data_json:
                 try:
-                    interesting_elements = requested_data_str["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']
+                    interesting_elements = rehydration_data_json["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']
                 except KeyError:
                     raise ItemInfoError
             else:
@@ -188,10 +188,10 @@ class TT_Scraper(HTML_Scraper):
             # scraping content, if requested by user
             if scrape_content:
                 try:
-                    binary_video = self._scrape_video(metadata = requested_data_str)
+                    binary_video = self._scrape_video(metadata = rehydration_data_json)
                     metadata_package["file_metadata"]["is_slide"] = False
                 except VideoIsPicture:
-                    binaries_slides, picture_formats, binary_slides_audio = self._scrape_picture(metadata = requested_data_str)
+                    binaries_slides, picture_formats, binary_slides_audio = self._scrape_picture(metadata = rehydration_data_json)
                     metadata_package["file_metadata"]["is_slide"] = True
                     metadata_package["file_metadata"]["picture_formats"] = picture_formats
 
@@ -250,15 +250,27 @@ class TT_Scraper(HTML_Scraper):
             return metadata_package, content_binary
 
     def scrape_user(self, username, download_metadata = True):
+        """
+        Scrapes a single user page based on the username.
+
+        Parameters
+        ----------
+        username : str 
+            The username of the account. It can be found in the URL when opening the account via a web browser. Insert the username with or without an "@"
+
+        download_metadata : bool
+            True = The metadata is downloaded to the output folder specifed when initiating the TT_Scraper Class. 
+            False = The metadata is returned as an output of this function.
+        """
         if "@" in username:
             username = str.replace(username, "@", "")
         
         # scraping html data
         requested_data = self.request_and_retain_cookies(f"https://www.tiktok.com/@{username}")
         soup = BeautifulSoup(requested_data.text, "html.parser")
-        rehydration_data_json = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
+        rehydration_data = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
 
-        rehydration_data_json = json.loads(rehydration_data_json.string)
+        rehydration_data_json = json.loads(rehydration_data.string)
 
         # filtering html data
         with open(f"test_folder/rehydration.json", "w", encoding="utf-8") as f:
@@ -273,4 +285,4 @@ class TT_Scraper(HTML_Scraper):
         else:
             return user_data
 
-        # handling exceptions        
+        # handling exceptions <work in progress>       
