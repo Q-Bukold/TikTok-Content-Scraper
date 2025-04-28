@@ -8,3 +8,6 @@ test_data/
 *.mp4
 *.json
 test_folder/
+debug_script.py
+.gitignore
+tutorial.ipynb
