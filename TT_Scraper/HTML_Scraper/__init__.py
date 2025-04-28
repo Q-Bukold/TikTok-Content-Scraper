@@ -60,7 +60,7 @@ class HTML_Scraper:
                 if browser_name is not None:
                         self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
 
-                r = requests.get(url,
+                response = requests.get(url,
                         allow_redirects=False, # may have to set to True
                         headers=self.headers,
                         cookies=self.cookies,
@@ -68,9 +68,9 @@ class HTML_Scraper:
                         stream=False)
                 
                 # retain any new cookies that got set in this request
-                self.cookies = r.cookies
+                self.cookies = response.cookies
 
-                return r
+                return response
 
 
 
