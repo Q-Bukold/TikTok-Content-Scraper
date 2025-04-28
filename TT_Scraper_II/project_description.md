@@ -1,0 +1,13 @@
+Welcome to this project. The idea of this branch is to create a second, overhauled version of the TT_Scraper Module. The motivation for this overhaul is as followed:
+
+**Filepath generation is too complicated**
+Due to the fact that the scraper was originally not meant to be published and evolved into something more and more comprehensive, the structure became to complicated over time. This lead to a very complicated way of naming files.
+
+Due to the fact that we, depending on the scraped object, have multiple combinations of outputs, an ad-hoc version of naming files was invented. It is very complicated and makes additional functions difficult to implement.
+
+> A new version should be able to cover the following combinations of output:
+> 1. .json (video metadata)
+> 1. .json (picture metadata)
+> 1. .json (account metadata)
+> 2. .json + .mp4 (video)
+> 2. .json + N * .jpeg + .mp3 (slide with multiple pictures and music)
