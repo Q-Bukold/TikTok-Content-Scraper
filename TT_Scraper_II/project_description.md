@@ -11,3 +11,13 @@ Due to the fact that we, depending on the scraped object, have multiple combinat
 > 1. .json (account metadata)
 > 2. .json + .mp4 (video)
 > 2. .json + N * .jpeg + .mp3 (slide with multiple pictures and music)
+
+# No functioning Sub-Modules
+If one part of the scraper is changed, the structure causes errors. Thus it might be better to switch to a more module like approach. 
+
+>A possible structure could be as follows:
+>/ pipeline with error handling  list of usernames / ids -> download of data
+>    / metadata scraper  ID -> JSON-like metadata
+>    / video scraper     JSON-like metadata -> mp4-like object
+>    / slide scraper     JSON-like metadata -> jpeg-like objects + mp3-like object
+>    / account scraper   username -> JSON-like metadata
