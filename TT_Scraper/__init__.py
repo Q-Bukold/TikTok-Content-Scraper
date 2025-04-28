@@ -256,7 +256,7 @@ class TT_Scraper(HTML_Scraper):
         Parameters
         ----------
         username : str 
-            The username of the account. It can be found in the URL when opening the account via a web browser. Insert the username with or without an "@"
+            The username of the profile. It can be found in the URL when opening the profile via a web browser. Insert the username with or without an "@"
 
         download_metadata : bool
             True = The metadata is downloaded to the output folder specifed when initiating the TT_Scraper Class. 

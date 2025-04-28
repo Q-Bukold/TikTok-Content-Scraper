@@ -90,7 +90,7 @@ ETA (current queue): 5 days, 10:23:19
 -> is slide with 17 pictures
 
 ```
-## Scrape multiple user accounts
+## Scrape multiple user profiles
 > Development in progress...
 
 # Citation
