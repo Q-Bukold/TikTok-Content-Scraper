@@ -4,7 +4,7 @@ from TT_Scraper import TT_Scraper
 tt = TT_Scraper(wait_time=0.3, output_files_fp="test_folder/")
 
 # Download all metadata as a .json and all content as .mp4/.jpeg
-#tt.scrape_list(ids = [7398323154424171806, 7447600730267061526], scrape_content = True, clear_console=True)
+tt.scrape_list(ids = [7398323154424171806, 7447600730267061526], scrape_content = True, clear_console=True)
 
 # scrape user profile
 tt.scrape_user(username="tagesschau", download_metadata=True)
