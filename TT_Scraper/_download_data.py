@@ -46,6 +46,7 @@ def write_pictures(self, slide_pictures, filepath):
 
 def write_slide_audio(self, slide_audio, filepath):
     filename = filepath.replace("*", "slide_audio.mp3")
-    with open(filename, "wb") as f:
-        f.write(slide_audio)
-    self.log.info(f"--> MP3 saved to {filename}")
+    if slide_audio:
+        with open(filename, "wb") as f:
+            f.write(slide_audio)
+        self.log.info(f"--> MP3 saved to {filename}")

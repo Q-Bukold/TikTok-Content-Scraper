@@ -17,6 +17,7 @@ def _scrape_picture(self, metadata):
     audio_url = metadata["__DEFAULT_SCOPE__"]['webapp.video-detail']['itemInfo']['itemStruct']["music"]["playUrl"]
     if audio_url == "":
         print("No audio found!")
+        audio_binary = None
     else:
         audio_binary: bytes = requests.get(audio_url).content    
     

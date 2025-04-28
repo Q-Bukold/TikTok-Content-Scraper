@@ -121,7 +121,6 @@ class TT_Scraper(HTML_Scraper):
         self._logging_queue_progress()
         if batch_of_metadata:
             self.log.info("Final output...")
-            pprint.pprint(batch_of_metadata)
             self._download_data(metadata_batch = batch_of_metadata)
         self.log.info("Queue ended.\n")
 

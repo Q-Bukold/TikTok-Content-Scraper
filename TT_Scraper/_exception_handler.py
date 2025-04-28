@@ -18,6 +18,9 @@ def _exception_handler(self, video_id, error_code, exception_name):
     metadata_package["video_metadata"]["id"] = video_id
     metadata_package["error_code"] = error_code
     metadata_package["exception"] = exception_name
-    metadata_package["video_content_binary"] = None
+    metadata_package["content_binary"] = None
+    metadata_package["file_metadata"] = dict()
+    metadata_package["file_metadata"]["filepath"] = f"{self.VIDEOS_OUT_FP}tiktok_{video_id}_*"
+
 
     return metadata_package
