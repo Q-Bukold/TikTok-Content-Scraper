@@ -273,9 +273,6 @@ class TT_Scraper(HTML_Scraper):
         rehydration_data_json = json.loads(rehydration_data.string)
 
         # filtering html data
-        with open(f"test_folder/rehydration.json", "w", encoding="utf-8") as f:
-            json.dump(rehydration_data_json, f, ensure_ascii=False, indent=4)
-
         user_data = rehydration_data_json["__DEFAULT_SCOPE__"]["webapp.user-detail"]["userInfo"]
 
         filepath = f"{self.VIDEOS_OUT_FP}tiktok_user_{username}.json"
