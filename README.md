@@ -8,6 +8,7 @@
 - Scrape extensive metadata.
 - Customizable and extendable via inheritance.
 - Supports batch processing and progress tracking.
+> New Feature = Author metadata scraping!
 
 ## Usage
 
@@ -29,7 +30,7 @@
    ```
 
 ## Scrape a single video or slide
-To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID `7460303767968156958` to scrape the associated video. In the folder `examples/` you can see what a potential output could look like.
+To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID `7460303767968156958` to scrape the associated video.
 
 ```python
 from TT_Scraper import TT_Scraper
@@ -39,6 +40,20 @@ tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
 
 # Download all metadata as a .json and all content as .mp4/.jpeg
 tt.scrape(id = 7460303767968156958, scrape_content = True, download_metadata = True, download_content = True)
+
+```
+
+## Scrape a single user profile
+To scrape the metadata of a user, the TikTok username is required (with or without an @). It can be found in the URL of a user profile. Let's use the ID `insidecdu` to scrape the associated user profile.
+
+```python
+from TT_Scraper import TT_Scraper
+
+# Configure the scraper, this step is always needed
+tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
+
+# scrape user profile
+tt.scrape_user(username="insidecdu", download_metadata=True)
 
 ```
 
@@ -75,6 +90,8 @@ ETA (current queue): 5 days, 10:23:19
 -> is slide with 17 pictures
 
 ```
+## Scrape multiple user accounts
+> Development in progress...
 
 # Citation
 Bukold, Q. (2025). TikTok Content Scraper (Version 1.0) [Computer software]. Weizenbaum Institute. https://doi.org/10.34669/WI.RD/4
