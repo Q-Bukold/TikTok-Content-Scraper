@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import json
 import time
 import browser_cookie3
+import pprint
 
 from ._exceptions_custom import *
 from .HTML_Scraper import HTML_Scraper
@@ -23,7 +24,7 @@ class TT_Scraper(HTML_Scraper):
     from ._exception_handler import _exception_handler
 
 
-    def scrape_list(self, ids : list = None, scrape_content : bool = True, batch_size : int = None, clear_console = False, total_videos=0, already_scraped_count=0, total_errors=0):
+    def scrape_list(self, ids : list = None, scrape_content : bool = True, batch_size : int = 0, clear_console = False, total_videos=0, already_scraped_count=0, total_errors=0):
         '''
         This pipeline makes use of the scrape function to scrape a list of video or slide IDs.
         
@@ -65,9 +66,6 @@ class TT_Scraper(HTML_Scraper):
         # initialisation        
         self.queue_length = len(ids)
         self.log.info(f"Length of Queue = {str(self.queue_length)}")
-
-        if not batch_size:
-            batch_size = self.queue_length
 
         ## statistics
         self.total_videos = total_videos
@@ -123,6 +121,7 @@ class TT_Scraper(HTML_Scraper):
         self._logging_queue_progress()
         if batch_of_metadata:
             self.log.info("Final output...")
+            pprint.pprint(batch_of_metadata)
             self._download_data(metadata_batch = batch_of_metadata)
         self.log.info("Queue ended.\n")
 
@@ -159,6 +158,18 @@ class TT_Scraper(HTML_Scraper):
         """
         id = str(id)
         try:
+            _ = int(id)
+        except ValueError:
+            self.log.error("The provided input is not an ID.")
+            raise ValueError
+        
+        # variables for the scraped data:
+        binary_video = None
+        binaries_slides = None
+        binary_slides_audio = None
+        metadata_package = dict()
+
+        try:
             # scraping html data
             requested_data = self.request_and_retain_cookies(f"https://www.tiktok.com/@tiktok/video/{id}")
             html_parser = BeautifulSoup(requested_data.text, "html.parser")
@@ -178,9 +189,6 @@ class TT_Scraper(HTML_Scraper):
                 self.log.info(f"https://www.tiktok.com/@tiktok/video/{id}")
                 raise NoDataFromURL
             metadata_package = self._filter_tiktok_data(interesting_elements)
-            binary_video = None
-            binaries_slides = None
-            binary_slides_audio = None
 
             filepath = f"{self.VIDEOS_OUT_FP}tiktok_{id}_*"
             metadata_package["file_metadata"]["filepath"] = filepath
