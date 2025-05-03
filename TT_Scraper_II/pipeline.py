@@ -4,6 +4,7 @@ import os
 import json
 from prefect import flow, task
 from prefect.logging import get_run_logger
+from prefect.task_runners import SequentialTaskRunner
 
 @task(name="creating output folder")
 def _init_output_location(output_folder : str):
@@ -20,7 +21,7 @@ def write_metadata_package(filepath, metadata_package):
 def user_scraper_p(x):
     return user_scraper(x)
 
-@flow(log_prints=True, name="TikTok-Content-Scraper")
+@flow(log_prints=True, name="TikTok-Content-Scraper", task_runner=SequentialTaskRunner())
 def scrape_list(input : list, output_folder : str = "scraped_data"):
     logger = get_run_logger()
     _init_output_location(output_folder)
