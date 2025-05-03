@@ -7,10 +7,10 @@ Due to the fact that we, depending on the scraped object, have multiple combinat
 
 > A new version should be able to cover the following combinations of output:
 > 1. .json (video metadata)
-> 1. .json (picture metadata)
-> 1. .json (account metadata)
-> 2. .json + .mp4 (video)
-> 2. .json + N * .jpeg + .mp3 (slide with multiple pictures and music)
+> 2. .json (picture metadata)
+> 3. .json (account metadata)
+> 4. .json + .mp4 (video)
+> 5. .json + N * .jpeg + .mp3 (slide with multiple pictures and music)
 
 # No functioning Sub-Modules
 If one part of the scraper is changed, the structure causes errors. Thus it might be better to switch to a more module like approach. 
@@ -23,3 +23,10 @@ A possible structure could be as follows:
     / slide scraper     JSON-like metadata -> jpeg-like objects + mp3-like object
     / account scraper   username -> JSON-like metadata
 ```
+
+Every scraper shall return one data object or the original error message it encountered. The errors are managed by the pipeline.
+
+---
+# Best Practises
+1. Functions that cant be used begin with an "_"
+2.
