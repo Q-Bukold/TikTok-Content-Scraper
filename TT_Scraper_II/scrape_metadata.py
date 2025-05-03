@@ -2,6 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 import browser_cookie3
+from _filter_tiktok_data import _filter_tiktok_data
 
 
 def metadata_scraper(video_id, browser_name=None) -> dict:
@@ -35,4 +36,5 @@ def metadata_scraper(video_id, browser_name=None) -> dict:
     script_tag = soup.find('script', id="__UNIVERSAL_DATA_FOR_REHYDRATION__")
     data = json.loads(script_tag.string)
     metadata = data["__DEFAULT_SCOPE__"]["webapp.video-detail"]["itemInfo"]["itemStruct"]
-    return metadata
+    sorted = _filter_tiktok_data(data_slot=metadata)
+    return sorted
