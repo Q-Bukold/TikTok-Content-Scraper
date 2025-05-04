@@ -24,7 +24,7 @@ def write_metadata_package(filepath, metadata_package):
 def user_scraper_p(x):
     return user_scraper(x)
 
-@task(name="scraping user")
+@task(name="scraping content metadata")
 def metadata_scraper_p(x):
     return metadata_scraper(x)
 
@@ -49,4 +49,4 @@ def scrape_list(output_folder : str = "scraped_data"):
 if __name__ == "__main__":
     input_lst = ["cdu", "7496425065773288726"]
     pd.to_pickle(input_lst, "seedlist.pkl")
-    scrape_list()
+    scrape_list.visualize()
