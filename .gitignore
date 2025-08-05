@@ -1,0 +1,10 @@
+**/__pycache__/
+.venv
+**.pyc
+test_data/
+.DS_Store
+*.jpeg
+*.mp3
+*.mp4
+*.json
+test_folder/
