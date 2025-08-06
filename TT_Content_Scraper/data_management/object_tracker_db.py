@@ -222,15 +222,16 @@ class ObjectTracker:
         try:
             if type == "all":
                 cursor = self.conn.execute("""
-                    SELECT id, title, type FROM objects 
+                    SELECT id, title, type 
+                    FROM objects 
                     WHERE status IN (?, ?)
                     LIMIT ? 
                 """, (ObjectStatus.PENDING.value, ObjectStatus.RETRY.value, limit))
             else:
                 cursor = self.conn.execute("""
-                    SELECT id, title, type FROM objects 
-                    WHERE status IN (?, ?) AND
-                            type = ?
+                    SELECT id, title, type 
+                    FROM objects 
+                    WHERE status IN (?, ?) AND type = ?
                     LIMIT ? 
                 """, (ObjectStatus.PENDING.value, ObjectStatus.RETRY.value, type, limit))
 
@@ -300,14 +301,22 @@ class ObjectTracker:
             logger.error(f"Error getting completed objects: {e}")
             raise
     
-    def get_stats(self) -> Dict[str, int]:
+    def get_stats(self, type="all") -> Dict[str, int]:
         """Get processing statistics"""
         try:
-            cursor = self.conn.execute("""
-                SELECT status, COUNT(*) 
-                FROM objects 
-                GROUP BY status
-            """)
+            if type == "all":
+                cursor = self.conn.execute("""
+                    SELECT status, COUNT(*) 
+                    FROM objects 
+                    GROUP BY status
+                """)
+            else:
+                cursor = self.conn.execute("""
+                    SELECT status, COUNT(*) 
+                    FROM objects 
+                    WHERE type = ?
+                    GROUP BY status
+                """, (type,))
             
             stats = {"completed": 0, "errors": 0, "pending": 0, "retry": 0}
             for status, count in cursor.fetchall():
