@@ -1,7 +1,7 @@
 from datetime import datetime
 import time
 
-def _force_to_int(self, value):
+def _force_to_int(value):
     """
     Given a value, returns the value as an int if possible.
     Otherwise returns None.
@@ -11,7 +11,7 @@ def _force_to_int(self, value):
     except (ValueError, TypeError):
         return None
 
-def _prep_hashtags_and_mentions(self, data_slot):
+def _prep_hashtags_and_mentions(data_slot):
     text_elements = data_slot.get("textExtra", None)
     challenges = data_slot.get("challenges", None)
 
@@ -24,12 +24,12 @@ def _prep_hashtags_and_mentions(self, data_slot):
                 # its a hashtag!
                 hashtag_data = {}
                 hashtag_data["name"] = element.get("hashtagName", None)
-                hashtag_data["id"] = self._force_to_int(element.get("hashtagId", None))
+                hashtag_data["id"] = _force_to_int(element.get("hashtagId", None))
                 hashtag_data["type"] = element.get("type", None)
                 hashtag_data["sub_type"] = element.get("subType", None)
                 hashtag_data["is_commerce"] = element.get("isCommerce", None)
 
-                matching_callenge = list(filter(lambda x : self._force_to_int(x["id"]) == hashtag_data["id"], challenges))
+                matching_callenge = list(filter(lambda x : _force_to_int(x["id"]) == hashtag_data["id"], challenges))
                 if matching_callenge:
                     matching_callenge = matching_callenge[0]
                     hashtag_data["description"] = matching_callenge["desc"]
@@ -43,17 +43,17 @@ def _prep_hashtags_and_mentions(self, data_slot):
 
     return hashtags_metadata, mentions_list
 
-def _filter_tiktok_data(self, data_slot):
-    hashtags_metadata, mentions_list = self._prep_hashtags_and_mentions(data_slot)
+def _filter_tiktok_data(data_slot):
+    hashtags_metadata, mentions_list = _prep_hashtags_and_mentions(data_slot)
 
     # video metadata
     video_metadata = {}
     ## id --> bigint NOT NULL
-    video_metadata["id"] = self._force_to_int(data_slot.get("id", None)) #ID of the specific video
+    video_metadata["id"] = _force_to_int(data_slot.get("id", None)) #ID of the specific video
     ## time_created --> timestamp without time zone,
     video_metadata["time_created"] = datetime.fromtimestamp(int(data_slot.get("createTime", None))).isoformat()
     ## author_id --> bigint
-    video_metadata["author_id"] = self._force_to_int(data_slot.get("author", {}).get("id", None))
+    video_metadata["author_id"] = _force_to_int(data_slot.get("author", {}).get("id", None))
     ## description --> text
     video_metadata["description"] = data_slot.get("desc", None)
     ## hashtags --> character varying(250)[]
@@ -64,7 +64,7 @@ def _filter_tiktok_data(self, data_slot):
     else:
         video_metadata["mentions"] = None
     ## music_id --> bigint
-    video_metadata["music_id"] = self._force_to_int(data_slot.get("music", {}).get("id", None))
+    video_metadata["music_id"] = _force_to_int(data_slot.get("music", {}).get("id", None))
     ## schedule_time --> integer
     video_metadata["schedule_time"] = data_slot.get("scheduleTime", None)
     ## location_created --> character varying(2)
@@ -89,17 +89,17 @@ def _filter_tiktok_data(self, data_slot):
         stats_data = data_slot.get("stats", {})
 
     ## diggcount --> integer
-    video_metadata["diggcount"] = self._force_to_int(stats_data.get("diggCount", None))
+    video_metadata["diggcount"] = _force_to_int(stats_data.get("diggCount", None))
     ## sharecount --> integer
-    video_metadata["sharecount"] = self._force_to_int(stats_data.get("shareCount", None))
+    video_metadata["sharecount"] = _force_to_int(stats_data.get("shareCount", None))
     ## commentcount --> integer
-    video_metadata["commentcount"] = self._force_to_int(stats_data.get("commentCount", None))
+    video_metadata["commentcount"] = _force_to_int(stats_data.get("commentCount", None))
     ## playcount --> integer
-    video_metadata["playcount"] = self._force_to_int(stats_data.get("playCount", None))
+    video_metadata["playcount"] = _force_to_int(stats_data.get("playCount", None))
     ## collectcount --> integer
-    video_metadata["collectcount"] = self._force_to_int(stats_data.get("collectCount", None))
+    video_metadata["collectcount"] = _force_to_int(stats_data.get("collectCount", None))
     ## repostcount --> integer
-    video_metadata["repostcount"] = self._force_to_int(stats_data.get("repostCount", None))
+    video_metadata["repostcount"] = _force_to_int(stats_data.get("repostCount", None))
 
     ## poi data for video metadata
     poi_data = stats_data.get("poi", None)
@@ -181,7 +181,7 @@ def _filter_tiktok_data(self, data_slot):
     # Video Files metadata
     file_metadata = {}
     ## id --> bigint NOT NULL
-    file_metadata["id"] = self._force_to_int(data_slot.get("id", None)) #ID of the specific video
+    file_metadata["id"] = _force_to_int(data_slot.get("id", None)) #ID of the specific video
     ## filepath --> path NOT NULL
     file_metadata["filepath"] = None #specified later
     ## duration --> integer
@@ -193,7 +193,7 @@ def _filter_tiktok_data(self, data_slot):
     ## ratio --> integer
     file_metadata["ratio"] = data_slot.get("video", {}).get("ratio", None) #in p
     if file_metadata["ratio"]:
-        file_metadata["ratio"] = self._force_to_int(file_metadata["ratio"][:-1]) # 540p -> 540
+        file_metadata["ratio"] = _force_to_int(file_metadata["ratio"][:-1]) # 540p -> 540
     else:
         file_metadata["ratio"] = None
     ## volume_loudness --> numeric(3, 1)
@@ -238,7 +238,7 @@ def _filter_tiktok_data(self, data_slot):
     # Author metadata
     author_metadata = {}
     ## id --> bigint
-    author_metadata["id"] = self._force_to_int(data_slot.get("author", {}).get("id", None))
+    author_metadata["id"] = _force_to_int(data_slot.get("author", {}).get("id", None))
     ## username --> character varying(250)
     author_metadata["username"] = data_slot.get("author", {}).get("uniqueId", None)
     ## name --> character varying(250)
