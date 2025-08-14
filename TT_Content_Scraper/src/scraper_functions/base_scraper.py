@@ -35,8 +35,9 @@ class BaseScraper():
         if browser_name:
             self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
             
-    def request_and_retain_cookies(self, url) -> requests.Response:
-
+    def request_and_retain_cookies(self, url, retain = True) -> requests.Response:
+            pprint(self.cookies)
+            print(f"Requesting {url}")
             response = requests.get(url,
                     allow_redirects=True, # may have to set to True
                     headers=self.headers,
@@ -45,7 +46,10 @@ class BaseScraper():
                     stream=True)
             
             # retain any new cookies that got set in this request
-            self.cookies = response.cookies
+            if retain:
+                self.cookies = response.cookies
+            pprint(self.cookies)
+            print("\n****")
 
             return response
 
@@ -135,10 +139,9 @@ class BaseScraper():
 
     def _scrape_video_binary(self, url):
         # edited version of pyktok.save_tiktok() (https://github.com/dfreelon/pyktok)
-
         # download video content
         try:
-            tt_video = self.request_and_retain_cookies(url)
+            tt_video = self.request_and_retain_cookies(url, retain=False)
         except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError):
             logger.warning("Object could not be scraped, retry later...")
             raise RetryLaterError
@@ -146,15 +149,15 @@ class BaseScraper():
         # permission error
         if str(tt_video) == "<Response [403]>" or not tt_video:
                 url = url.replace("=tt_chain_token", "")
-                tt_video = self.request_and_retain_cookies(url)
+                tt_video = self.request_and_retain_cookies(url, retain=False)
 
-        print(tt_video)
+        assert str(tt_video) != "<Response [403]>", ConnectionError
         return tt_video.content
 
     def _scrape_picture(self, url):
         # request pictures
         try:
-            tt_pic = self.request_and_retain_cookies(url)
+            tt_pic = self.request_and_retain_cookies(url, retain=False)
         except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError):
             logger.warning("Object could not be scraped, retry later...")
             raise RetryLaterError
@@ -163,7 +166,7 @@ class BaseScraper():
             
     def _scrape_audio(self, url):
         try:
-            tt_audio = self.request_and_retain_cookies(url)
+            tt_audio = self.request_and_retain_cookies(url, retain=False)
         except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError):
             logger.warning("Object could not be scraped, retry later...")
             raise RetryLaterError

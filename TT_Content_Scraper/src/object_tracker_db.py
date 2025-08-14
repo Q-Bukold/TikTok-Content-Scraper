@@ -6,7 +6,7 @@ from pathlib import Path
 import logging
 from typing import List, Dict, Any, Optional
 
-import TT_Content_Scraper.data_management.logger
+import TT_Content_Scraper.src.logger
 logger = logging.getLogger('TTCS.ObjTracker')
 
 class ObjectStatus(Enum):

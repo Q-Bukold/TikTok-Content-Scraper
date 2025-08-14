@@ -1,7 +1,7 @@
 import logging
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     format='%(asctime)-1s;%(levelname)s:%(name)-15s: %(message)s',
     datefmt='%m-%d/%H:%M',
     force=True  # Important for Jupyter!

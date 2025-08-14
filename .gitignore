@@ -8,3 +8,4 @@ test_data/
 *.mp4
 *.json
 test_folder/
+**toast.py

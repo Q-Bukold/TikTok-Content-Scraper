@@ -101,15 +101,15 @@ def _filter_tiktok_data(data_slot):
     ## repostcount --> integer
     video_metadata["repostcount"] = _force_to_int(stats_data.get("repostCount", None))
 
-    ## poi data for video metadata
-    poi_data = stats_data.get("poi", None)
-    if poi_data is not None:
-        ## poi_name --> character varying(250)
-        video_metadata["poi_name"] = poi_data.get("name", None)
-        ## poi_address --> character varying(250)
-        video_metadata["poi_address"] = poi_data.get("address", None)
-        ## poi_city --> character varying(250)
-        video_metadata["poi_city"] = poi_data.get("city", None)
+    ## poi data for video metadata <depreciated>
+    #poi_data = stats_data.get("poi", None)
+    #if poi_data is not None:
+    #    ## poi_name --> character varying(250)
+    #    video_metadata["poi_name"] = poi_data.get("name", None)
+    #    ## poi_address --> character varying(250)
+    #    video_metadata["poi_address"] = poi_data.get("address", None)
+    #    ## poi_city --> character varying(250)
+    #    video_metadata["poi_city"] = poi_data.get("city", None)
 
     ## warn_info --> json[]
     video_metadata["warn_info"] = data_slot.get("warnInfo", None)

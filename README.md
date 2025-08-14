@@ -8,152 +8,271 @@
 - Scrape extensive metadata.
 - Customizable and extendable via inheritance.
 - Supports batch processing and progress tracking.
-> New Feature = Author metadata scraping!
+- **Progress Tracking**: SQLite database tracks scraping progress, errors, and completion status
+- **CLI Interface**: Easy-to-use command-line interface with multiple commands
+- **Statistics**: Detailed progress statistics and reporting
+- **Rate Limiting**: Configurable wait times to respect API limits
 
-## Usage
+## Installation
 
-### Setup
+Clone this repository and install dependencies:
 
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/Q-Bukold/TikTok-Content-Scraper.git
-   ```
+```bash
+git clone <repository-url>
+cd TT_Content_Scraper
+pip install -r requirements.txt
+```
 
-2. **Install All Dependencies in the Requirements File**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Using the scraper via the command line
 
-3. **Run the Example Script**:
-   ```bash
-   python3 example_script.py
-   ```
+## Quick Start
 
-## Scrape a single video or slide
-To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. Let's use the ID `7460303767968156958` to scrape the associated video.
+### 1. Prepare your ID lists
+
+Create text files with TikTok IDs (one per line):
+
+**content_ids.txt:**
+```
+7123456789012345678
+7234567890123456789
+7345678901234567890
+```
+
+**user_ids.txt:**
+```
+user123
+user456
+user789
+```
+
+### 2. Add IDs to the tracker
+
+```bash
+# Add content IDs
+python -m TT_Content_Scraper add content_ids.txt --type content
+
+# Add user IDs
+python -m TT_Content_Scraper add user_ids.txt --type user
+```
+
+### 3. Start scraping
+
+```bash
+# Scrape all pending objects
+python -m TT_Content_Scraper scrape
+
+# Or scrape specific types
+python -m TT_Content_Scraper scrape --type content --scrape-files
+```
+
+### 4. Monitor progress
+
+```bash
+# View statistics
+python -m TT_Content_Scraper stats
+
+# View detailed stats for content objects
+python -m TT_Content_Scraper stats --type content --detailed
+```
+
+## CLI Commands
+
+### `add` - Add IDs from file
+
+Add TikTok IDs to the tracking database from a text file.
+
+```bash
+python -m TT_Content_Scraper add <file> --type <content|user> [options]
+```
+
+**Arguments:**
+- `file`: Text file containing IDs (one per line)
+- `--type`: Object type (`content` or `user`)
+- `--title`: Optional title for all added objects
+
+**Examples:**
+```bash
+python -m TT_Content_Scraper add my_ids.txt --type content
+python -m TT_Content_Scraper add users.txt --type user --title "Batch 1"
+```
+
+### `scrape` - Start scraping
+
+Begin scraping pending objects from the database.
+
+```bash
+python -m TT_Content_Scraper scrape [options]
+```
+
+**Options:**
+- `--type <content|user|all>`: Type of objects to scrape (default: all)
+- `--scrape-files`: Download binary files (videos, images, audio)
+- `--clear-console`: Clear console between iterations
+
+**Examples:**
+```bash
+# Scrape everything
+python -m TT_Content_Scraper scrape
+
+# Scrape only content with file downloads
+python -m TT_Content_Scraper scrape --type content --scrape-files
+
+# Scrape users only
+python -m TT_Content_Scraper scrape --type user
+```
+
+### `stats` - View statistics
+
+Display scraping progress and statistics.
+
+```bash
+python -m TT_Content_Scraper stats [options]
+```
+
+**Options:**
+- `--type <content|user|all>`: Object type to show stats for (default: all)
+- `--detailed`: Show detailed statistics including error information
+
+**Examples:**
+```bash
+python -m TT_Content_Scraper stats
+python -m TT_Content_Scraper stats --type content --detailed
+```
+
+### `status` - Check object status
+
+Check the status of specific objects by their IDs.
+
+```bash
+python -m TT_Content_Scraper status <id1> <id2> [...]
+```
+
+**Example:**
+```bash
+python -m TT_Content_Scraper status 7123456789012345678 user123
+```
+
+### `reset-errors` - Reset failed objects
+
+Reset all objects with error status back to pending for retry.
+
+```bash
+python -m TT_Content_Scraper reset-errors
+```
+
+### `clear` - Clear all data
+
+Clear all tracking data from the database (use with caution).
+
+```bash
+python -m TT_Content_Scraper clear --confirm
+```
+
+## Global Options
+
+These options can be used with any command:
+
+- `--output-dir <path>`: Output directory for scraped data (default: `data/`)
+- `--progress-db <path>`: Progress database file path (default: `progress_tracking/scraping_progress.db`)
+- `--wait-time <seconds>`: Wait time between requests (default: 0.35)
+- `--verbose, -v`: Enable verbose output
+
+**Example:**
+```bash
+python -m TT_Content_Scraper --output-dir "my_data/" --wait-time 0.5 scrape --type content
+```
+
+## Output Structure
+
+The scraper organizes output files as follows:
+
+```
+data/
+├── content_metadata/
+│   ├── 7123456789012345678.json
+│   ├── 7234567890123456789.json
+│   └── ...
+├── user_metadata/
+│   ├── max.json
+│   ├── john.json
+│   └── ...
+└── content_files/
+    ├── tiktok_7123456789012345678_video.mp4
+    ├── tiktok_7234567890123456789_slide0.jpeg
+    ├── tiktok_7234567890123456789_slide1.jpeg
+    ├── tiktok_7234567890123456789_audio.mp3
+    └── ...
+```
+
+## Progress Tracking
+
+The scraper uses an SQLite database to track progress:
+
+### Object Status Types
+- **Pending**: Objects waiting to be scraped
+- **Completed**: Successfully scraped objects
+- **Error**: Objects that failed during scraping
+- **Retry**: Error objects reset for retry
+
+### Database Schema
+The tracker maintains detailed information about each object:
+- Unique ID and type (content/user)
+- Current status and timestamps
+- Error messages and attempt counts
+- File paths for completed objects
+
+## Programming Interface
+
+You can also use the scraper programmatically:
 
 ```python
-from TT_Scraper import TT_Scraper
+from TT_Content_Scraper import TT_Content_Scraper, ObjectTracker
 
-# Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
+# Create scraper instance
+scraper = TT_Content_Scraper(
+    wait_time=0.35,
+    output_files_fp="data/",
+    progress_file_fn="progress.db"
+)
 
-# Download all metadata as a .json and all content as .mp4/.jpeg
-tt.scrape(id = 7460303767968156958, scrape_content = True, download_metadata = True, download_content = True)
+# Add objects to track
+tracker = ObjectTracker("progress.db")
+tracker.add_objects(["123", "456"], type="content")
 
+# Start scraping
+scraper.scrape_pending(only_content=True, scrape_files=True)
+
+# Get statistics
+stats = tracker.get_stats("content")
+print(f"Completed: {stats['completed']}")
 ```
 
-## Scrape a single user profile
-To scrape the metadata of a user, the TikTok username is required (with or without an @). It can be found in the URL of a user profile. Let's use the ID `insidecdu` to scrape the associated user profile.
+## Configuration
 
-```python
-from TT_Scraper import TT_Scraper
+### Default Settings
+- **Wait Time**: 0.35 seconds between requests
+- **Output Directory**: `data/`
+- **Progress Database**: `progress_tracking/scraping_progress.db`
+- **Console Clearing**: Disabled by default
 
-# Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
+### Customizing Settings
+All settings can be customized via command-line options or when creating scraper instances programmatically.
 
-# scrape user profile
-tt.scrape_user(username="insidecdu", download_metadata=True)
+## Logging
 
-```
+The scraper uses Python's logging module with different levels:
+- **INFO**: General progress information
+- **DEBUG**: Detailed operation information
+- **WARNING**: Non-fatal issues
+- **ERROR**: Error conditions
 
-## Scrape multiple videos and slides
-You can also scrape a list of IDs with the following code. The scraper detects on it's own, if the content is a Slide or Video.
+## Best Practices
 
-```python
-import pandas as pd
-from TT_Scraper import TT_Scraper
+1. **Respect Rate Limits**: Use appropriate wait times to avoid being blocked
+2. **Backup Progress**: Regularly backup your progress database
+3. **Check Disk Space**: Monitor available disk space when downloading files
 
-# Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
+## Disclaimer
 
-# Define list of TikTok ids (ids can be string or integer) 
-data = pd.read_csv("data/seedlist.csv")
-my_list = data["ids"].tolist()
-
-# Insert list into scraper
-tt.scrape_list(ids = my_list, scrape_content = True, batch_size = None, clear_console = True)
-```
-
-The `scrape_list` function provides a useful overview of your progress. Enable `clear_console` to clear the terminal output after every scrape. Note that `clear_console` does not work on Windows machines.
-
-```
-Queue Information:
-Current Queue: 691 / 163,336
-Errors in a row: 0
-1.10 iteration time
-2.89 sec. per video (averaged)
-ETA (current queue): 5 days, 10:23:19
-
----
--> id 7359982080861703457
--> is slide with 17 pictures
-
-```
-## Scrape multiple user profiles
-> Development in progress...
-
-# Citation
-Bukold, Q. (2025). TikTok Content Scraper (Version 1.0) [Computer software]. Weizenbaum Institute. https://doi.org/10.34669/WI.RD/4
-
-# Advanced Usage
-## Alternatives to saving the data on drive
-The scraper can download metadata and content (video file, images) as well as return them as variables. Metadata is returned as a dictionary or saved as a `.json` file, and content is saved as `.mp4` / `.jpeg` + `.mp3` or returned as an array of binaries. Remember the rule: what is not downloaded is returned.
-
-```python
-from TT_Scraper import TT_Scraper
-
-# Configure the scraper, this step is always needed
-tt = TT_Scraper(wait_time=0.3, output_files_fp="data/")
-
-# Downloading Everything
-tt.scrape(
-	id = 7460303767968156958,
-	scrape_content = True,
-	download_metadata = True,
-	download_content = True)
-  
-# Returning Everything
-metadata, content = tt.scrape(
-	id = 7460303767968156958,
-	scrape_content = True,
-	download_metadata = False,
-	download_content = False)
-  
-# Returning one of the two and downloading the other
-metadata = tt.scrape(
-	id = 7460303767968156958,
-	scrape_content = True,
-	download_metadata = False,
-	download_content = True)
-```
-
-## Alternatives to saving the data on the drive II: Overwriting the _download_data function 
-Changing the output of `scrape_list()` is a bit more difficult, but can be achieved by overwriting a function called `\_download_data()` that is part of the `TT_Scraper` class. To overwrite the function, one must inherit the class. The variable `metadata_batch` is a list of dictionaries, each containing all the metadata of a video/slide as well as the binary content of a video/slide. 
-
-Let's save the content, but insert the metadata into a database:
-```python
-from TT_Scraper import TT_Scraper
-
-# create a new class, that inherits the TT_Scraper
-class TT_Scraper_DB(TT_Scraper):
-	def __init__(self, wait_time = 0.35, output_files_fp = "data/"):
-		super().__init__(wait_time, output_files_fp)
-
-	# overwriting download_data function to upsert metadata into database
-	def _download_data(self, metadata_batch, download_metadata = True, download_content = True):
-
-		for metadata_package in metadata_batch:
-			# insert metadata into database
-			self.insert_metadata_to_db(metadata_package)
-	
-		# downloading content
-		super()._download_data(metadata_batch, download_metadata=False, download_content=True)
-
-	def insert_metadata_to_db(metadata_package)
-		...
-		return None
-
-tt = TT_Scraper_DB(wait_time = 0.35, output_files_fp = "data/")
-tt.scrape_list(my_list)
+This tool is for educational and research purposes in the EU only. Please respect the applicable regulations. Be responsible with scraping and avoid overloading TikTok's servers.
 ```

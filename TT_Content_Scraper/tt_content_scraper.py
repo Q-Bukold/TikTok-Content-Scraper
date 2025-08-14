@@ -11,6 +11,10 @@ from .src.logger import logger
 from .src.object_tracker_db import ObjectTracker
 from .src.scraper_functions.base_scraper import BaseScraper
 
+# initialize html scraper
+base_scraper = BaseScraper()
+
+
 class TT_Content_Scraper(ObjectTracker):
     def __init__(self,
                 wait_time = 0.35,
@@ -20,10 +24,7 @@ class TT_Content_Scraper(ObjectTracker):
                 browser_name = None):
         
         # initialize object tracker (database of pending and finished objects (ids))
-        super().__init__(wait_time,output_files_fp,progress_file_fn)
-
-        # initialize html scraper
-        self.base_scraper = BaseScraper(browser_name)
+        super().__init__(progress_file_fn)
 
         # create output folder if doesnt exist
         Path(output_files_fp).mkdir(parents=True, exist_ok=True)
@@ -37,15 +38,7 @@ class TT_Content_Scraper(ObjectTracker):
         self.clear_console = clear_console
 
         logger.info("Scraper Initialized\n***")
-    
-    def _exception_handler(func):
-        def inner_function(*args, **kwargs):
-            try:
-                func(*args, **kwargs)
-            except TypeError:
-                print(f"{func.__name__} raised an TypeError")
-        return inner_function
-    
+        
     def scrape_pending(self, only_content=False, only_users=False, scrape_files = False):
     
         if only_content:
@@ -86,12 +79,10 @@ class TT_Content_Scraper(ObjectTracker):
                 time.sleep(wait_time_left)
                 self.repeated_error = 0
 
-
-    #@_exception_handler
     def _user_action_protocol(self, id):
         filepath = os.path.join(self.output_files_fp, "user_metadata/", f"{id}.json")
         Path(self.output_files_fp, "content_metadata/").mkdir(parents=True, exist_ok=True)
-        user_data = self.base_scraper.scrape_user(id)
+        user_data = base_scraper.scrape_user(id)
         self._write_metadata_package(user_data, filepath)
         self.mark_completed(id, filepath)
 
@@ -100,7 +91,7 @@ class TT_Content_Scraper(ObjectTracker):
         Path(self.output_files_fp, "content_metadata/").mkdir(parents=True, exist_ok=True)
 
         try:
-            sorted_metadata, link_to_binaries = self.base_scraper.scrape_metadata(id)
+            sorted_metadata, link_to_binaries = base_scraper.scrape_metadata(id)
         except KeyError as e:
             logger.warning(f"ID {id} did not lead to any metadata - KeyError {e}")
             self.mark_error(id, str(e))
@@ -113,7 +104,7 @@ class TT_Content_Scraper(ObjectTracker):
             filepath = os.path.join(self.output_files_fp, "content_files/", f"{id}.json")
             Path(self.output_files_fp, "content_files/").mkdir(parents=True, exist_ok=True)
 
-            binaries : dict = self.base_scraper.scrape_binaries(link_to_binaries)
+            binaries : dict = base_scraper.scrape_binaries(link_to_binaries)
             
             # if video available
             if binaries["mp4"]:
@@ -125,8 +116,8 @@ class TT_Content_Scraper(ObjectTracker):
                     self._write_pictures(picture_content=jpeg,
                                          filename=Path(self.output_files_fp, "content_files/", f"tiktok_{id}_slide{str(i)}.jpeg"))
                 if binaries["mp3"]:
-                    self._write_slide_audio(audio_content=binaries["mp3"],
-                                            filename=Path(self.output_files_fp, "content_files/", f"tiktok_{id}_slide_audio.mp3"))
+                    self._write_audio(audio_content=binaries["mp3"],
+                                            filename=Path(self.output_files_fp, "content_files/", f"tiktok_{id}_audio.mp3"))
 
         self.mark_completed(id, filepath)
 
@@ -182,7 +173,7 @@ class TT_Content_Scraper(ObjectTracker):
             f.write(picture_content)
         logger.debug(f"--> JPEG saved to {filename}")
 
-    def _write_slide_audio(self, audio_content, filename):
+    def _write_audio(self, audio_content, filename):
         with open(filename, "wb") as f:
             f.write(audio_content)
         logger.debug(f"--> MP3 saved to {filename}")
