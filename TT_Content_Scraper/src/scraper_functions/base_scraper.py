@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 import json
 from pprint import pprint
 import ssl
+import time
 
 
 from ._filter_tiktok_data import _filter_tiktok_data
@@ -36,8 +37,6 @@ class BaseScraper():
             self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
             
     def request_and_retain_cookies(self, url, retain = True) -> requests.Response:
-            pprint(self.cookies)
-            print(f"Requesting {url}")
             response = requests.get(url,
                     allow_redirects=True, # may have to set to True
                     headers=self.headers,
@@ -48,8 +47,6 @@ class BaseScraper():
             # retain any new cookies that got set in this request
             if retain:
                 self.cookies = response.cookies
-            pprint(self.cookies)
-            print("\n****")
 
             return response
 
@@ -111,30 +108,37 @@ class BaseScraper():
         return user_data
 
     def scrape_binaries(self, links) -> dict:
-        pprint(links)
         audio_binary = None
         video_binary = None
         picture_content_binary = None
+        retries = 0
 
-        if links["mp3"]:
-            audio_binary = self._scrape_audio(links["mp3"])
-        if links["mp4"]:
-            video_binary = self._scrape_video_binary(links["mp4"])
-        if links["jpegs"]:
-            metadata_images = links["jpegs"]
-            logger.info("-> is slide with {} pictures".format(len(metadata_images)))
-            picture_content_binary = (len(metadata_images)) * [None]
-            for i in range(len(metadata_images)):
-                tt_pic_url = metadata_images[i]["imageURL"]["urlList"][0]
-                # metadata_images[i].pop("imageURL")
-                # picture_formats = metadata_images
+        while retries <= 3:
+            try:
+                if links["mp3"]:
+                    audio_binary = self._scrape_audio(links["mp3"])
+                if links["mp4"]:
+                    video_binary = self._scrape_video_binary(links["mp4"])
+                if links["jpegs"]:
+                    metadata_images = links["jpegs"]
+                    logger.info("-> is slide with {} pictures".format(len(metadata_images)))
+                    picture_content_binary = (len(metadata_images)) * [None]
+                    for i in range(len(metadata_images)):
+                        tt_pic_url = metadata_images[i]["imageURL"]["urlList"][0]
+                        # metadata_images[i].pop("imageURL")
+                        # picture_formats = metadata_images
 
-                pic_binary = self._scrape_picture(tt_pic_url)
-                picture_content_binary[i] = pic_binary
-        
-        return {"mp3": audio_binary,
-                "mp4": video_binary,
-                "jpegs": picture_content_binary}
+                        pic_binary = self._scrape_picture(tt_pic_url)
+                        picture_content_binary[i] = pic_binary
+                
+                return {"mp3": audio_binary,
+                        "mp4": video_binary,
+                        "jpegs": picture_content_binary}
+            except requests.exceptions.ChunkedEncodingError:
+                logger.warning("ChunkedEncodingError - retrying max. 3 times with 0.5s sleep in between")
+                time.sleep(0.5)
+                retries += 1
+                continue
 
 
     def _scrape_video_binary(self, url):

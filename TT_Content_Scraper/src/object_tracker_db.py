@@ -389,6 +389,21 @@ class ObjectTracker:
             logger.error(f"Error resetting error objects: {e}")
             raise
     
+    def reset_all_to_pending(self):
+        """Reset all objects back to pending for retry"""
+        try:
+            cursor = self.conn.execute("""
+                UPDATE objects 
+                SET status = "pending", last_error = NULL, last_attempt = NULL
+            """)
+            self.conn.commit()
+            
+            logger.info(f"Reset {cursor.rowcount} objects to pending")
+            return cursor.rowcount
+        except sqlite3.Error as e:
+            logger.error(f"Error resetting error objects: {e}")
+            raise
+    
     def clear_all_data(self):
         """Clear all tracking data (use with caution!)"""
         try:

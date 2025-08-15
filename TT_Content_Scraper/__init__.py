@@ -2,13 +2,6 @@
 """
 TT_Content_Scraper Package
 
-A comprehensive TikTok content scraping package that allows you to:
-- Track scraping progress with SQLite database
-- Scrape TikTok user metadata and content metadata
-- Download binary files (videos, images, audio)
-- Handle errors and retry failed scrapes
-- Monitor progress with detailed statistics
-
 Main Components:
 - TT_Content_Scraper: Main scraper class
 - ObjectTracker: Database for tracking scraping progress
@@ -75,7 +68,7 @@ def create_scraper(**kwargs):
         clear_console=config["clear_console"]
     )
 
-def create_tracker(db_file="object_progress.db"):
+def create_tracker(progress_file_fn="progress_tracking/scraping_progress.db"):
     """
     Convenience function to create an ObjectTracker instance.
     
@@ -89,7 +82,7 @@ def create_tracker(db_file="object_progress.db"):
         >>> tracker = create_tracker("my_progress.db")
         >>> tracker.add_objects(["123", "456"], type="content")
     """
-    return ObjectTracker(db_file)
+    return ObjectTracker(progress_file_fn)
 
 def get_version():
     """Return the package version."""

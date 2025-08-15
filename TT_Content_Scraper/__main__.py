@@ -10,8 +10,8 @@ import os
 from pathlib import Path
 from typing import Optional, List
 
-from . import TT_Content_Scraper
-from .src.object_tracker_db import ObjectTracker
+from .tt_content_scraper import TT_Content_Scraper
+from .src.object_tracker_db import ObjectTracker, ObjectStatus
 
 
 def setup_parser() -> argparse.ArgumentParser:
@@ -126,6 +126,12 @@ def setup_parser() -> argparse.ArgumentParser:
         "reset-errors",
         help="Reset all error objects back to pending for retry"
     )
+
+    # Reset all objects command
+    reset_all_parser = subparsers.add_parser(
+        "reset-all",
+        help="Reset all error objects back to pending for retry"
+    )
     
     # Clear data command
     clear_parser = subparsers.add_parser(
@@ -232,9 +238,9 @@ def main():
                 print("\nScraping interrupted by user.")
             except AssertionError as e:
                 print(f"Scraping completed: {e}")
-            except Exception as e:
-                print(f"Error during scraping: {e}", file=sys.stderr)
-                sys.exit(1)
+            #except Exception as e:
+            #    print(f"Error during scraping: {e}", file=sys.stderr)
+            #    sys.exit(1)
             
         elif args.command == "stats":
             # Show statistics
@@ -274,6 +280,14 @@ def main():
             print(f"Reset {count} error objects back to pending")
             print_stats(tracker)
             tracker.close()
+        
+        elif args.command == "reset-all":
+            # Reset error objects to pending
+            tracker = ObjectTracker(args.progress_db)
+            count = tracker.reset_all_to_pending()
+            print(f"Reset {count} error, retry and completed objects back to pending")
+            print_stats(tracker)
+            tracker.close()
             
         elif args.command == "clear":
             # Clear all data
@@ -292,13 +306,13 @@ def main():
     except KeyboardInterrupt:
         print("\nOperation interrupted by user.")
         sys.exit(0)
-    except Exception as e:
-        if args.verbose:
-            import traceback
-            traceback.print_exc()
-        else:
-            print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    #except Exception as e:
+    #    if args.verbose:
+    #        import traceback
+    #        traceback.print_exc()
+    #    else:
+    #        print(f"Error: {e}", file=sys.stderr)
+    #    sys.exit(1)
 
 
 if __name__ == "__main__":

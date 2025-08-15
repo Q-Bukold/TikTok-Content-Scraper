@@ -1,5 +1,4 @@
 #Python 3.12.3
-pandas
 browser_cookie3
 bs4
 requests

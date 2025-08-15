@@ -60,6 +60,8 @@ class TT_Content_Scraper(ObjectTracker):
                 title = seed[1]["title"]
 
                 logger.info(f"Scraping ID: {id}")
+                self._logging_queue_progress(type = seed_type)
+
 
                 if type == "user":
                     self._user_action_protocol(id)
@@ -73,18 +75,19 @@ class TT_Content_Scraper(ObjectTracker):
                 self.ITER_TIME = self.ITER_TIME + wait_time_left
 
                 # succesfull run
-                if self.clear_console:
-                    self._clear_console()
-                self._logging_queue_progress(type = seed_type)
                 time.sleep(wait_time_left)
                 self.repeated_error = 0
+                if self.clear_console:
+                    self._clear_console()
+
 
     def _user_action_protocol(self, id):
         filepath = os.path.join(self.output_files_fp, "user_metadata/", f"{id}.json")
-        Path(self.output_files_fp, "content_metadata/").mkdir(parents=True, exist_ok=True)
+        Path(self.output_files_fp, "user_metadata/").mkdir(parents=True, exist_ok=True)
         user_data = base_scraper.scrape_user(id)
         self._write_metadata_package(user_data, filepath)
         self.mark_completed(id, filepath)
+        self.n_scraped_total += 1
 
     def _content_action_protocol(self, id, scrape_files):
         filepath = os.path.join(self.output_files_fp, "content_metadata/", f"{id}.json")
@@ -95,6 +98,7 @@ class TT_Content_Scraper(ObjectTracker):
         except KeyError as e:
             logger.warning(f"ID {id} did not lead to any metadata - KeyError {e}")
             self.mark_error(id, str(e))
+            self.n_errors_total += 1
             return None
         
         self._write_metadata_package(sorted_metadata, filepath)
@@ -120,12 +124,14 @@ class TT_Content_Scraper(ObjectTracker):
                                             filename=Path(self.output_files_fp, "content_files/", f"tiktok_{id}_audio.mp3"))
 
         self.mark_completed(id, filepath)
+        self.n_scraped_total += 1
 
     def _logging_queue_progress(self, type):
-        stats = self.get_stats(type)
-        self.already_scraped_count = stats["completed"]
-        self.total_errors = stats["errors"]
-        self.total_videos = self.already_scraped_count + self.total_errors + stats["pending"] + stats["retry"]
+        if self.iterations == 0:
+            stats = self.get_stats(type)
+            self.n_scraped_total = stats["completed"]
+            self.n_errors_total = stats["errors"]
+            self.n_total = self.n_scraped_total + self.n_errors_total + stats["pending"] + stats["retry"]            
 
         # calculate ETA
         self.iter_times.insert(0, self.ITER_TIME)
@@ -134,18 +140,18 @@ class TT_Content_Scraper(ObjectTracker):
         if self.iterations % 15 == 0 and self.iterations < 2_000:
             self.mean_iter_time = statistics.mean(self.iter_times)
             self.queue_eta = str(timedelta(seconds=int(stats["pending"] * self.mean_iter_time)))
-        elif (self.iterations) % 501 == 0:
+        elif self.iterations % 501 == 0:
             self.queue_eta = str(timedelta(seconds=int(stats["pending"] * self.mean_iter_time)))
         
-        if self.total_videos > 0 or self.already_scraped_count > 0:
-            logger.info(f"Scraped objects: {(self.already_scraped_count + self.total_errors) :,} / {self.total_videos :,}")
-            logger.info(f"-> minus errors: {self.already_scraped_count :,} / {(self.total_videos-self.total_errors) :,}")
+        if self.n_total > 0 or self.n_scraped_total > 0:
+            logger.info(f"Scraped objects: {(self.n_scraped_total + self.n_errors_total) :,} / {self.n_total :,}")
+            logger.info(f"-> minus errors: {self.n_scraped_total :,} / {(self.n_total-self.n_errors_total) :,}")
 
         if self.repeated_error > 0:
             logger.info(f"Errors in a row: {self.repeated_error}")
 
         logger.info(str(round(self.ITER_TIME, 2)) + " sec. iteration time")
-        logger.info(str(round(self.mean_iter_time, 2)) + " sec. per video (averaged)")
+        logger.info(str(round(self.mean_iter_time, 2)) + " sec. per it. (averaged)")
         logger.info(f"ETA (current queue): {self.queue_eta}\n***\n")
 
         #logger.info("Disk Information:")
