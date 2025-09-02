@@ -7,5 +7,7 @@ test_data/
 *.mp3
 *.mp4
 *.json
+*.txt
 test_folder/
 **toast.py
+db_connection.py

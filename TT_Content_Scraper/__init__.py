@@ -17,6 +17,7 @@ __description__ = "TikTok Content Scraper with progress tracking"
 try:
     from .tt_content_scraper import TT_Content_Scraper
     from .src.object_tracker_db import ObjectTracker, ObjectStatus
+    from .src.scraper_functions.base_scraper import BaseScraper
     
     # Import logger configuration
     from .src import logger

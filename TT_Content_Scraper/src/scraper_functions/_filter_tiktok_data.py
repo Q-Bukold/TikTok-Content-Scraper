@@ -101,7 +101,8 @@ def _filter_tiktok_data(data_slot):
     ## repostcount --> integer
     video_metadata["repostcount"] = _force_to_int(stats_data.get("repostCount", None))
 
-    ## poi data for video metadata <depreciated>
+    # <depreciated>
+    ## poi data for video metadata
     #poi_data = stats_data.get("poi", None)
     #if poi_data is not None:
     #    ## poi_name --> character varying(250)
@@ -162,7 +163,7 @@ def _filter_tiktok_data(data_slot):
     ## diversification_id --> bigint
     video_metadata["diversification_id"] = data_slot.get("diversificationId", None)
     ## channel_tags --> character varying(250)[]
-    video_metadata["channel_tags"] = data_slot.get("channelTags", None) # wirklich dem Author zugehörig?
+    video_metadata["channel_tags"] = data_slot.get("channelTags", None) # is it really tied to the author?
     if video_metadata["channel_tags"] == {}:
         video_metadata["channel_tags"] = None
     ## keyword_tags --> json[]
@@ -215,14 +216,8 @@ def _filter_tiktok_data(data_slot):
     music_metadata["id"] = video_metadata["music_id"] # ID of the music, not the video!
     ## title --> character varying(250)
     music_metadata["title"] = data_slot.get("music", {}).get("title", None)
-    if music_metadata["title"]:
-        if len(music_metadata["title"]) > 250:
-            music_metadata["title"] = music_metadata["title"][:250]
     ## author_name --> character varying(250)
     music_metadata["author_name"] = data_slot.get("music", {}).get("authorName", None)
-    if music_metadata["author_name"]:
-        if len(music_metadata["author_name"]) > 250:
-            music_metadata["author_name"] = music_metadata["author_name"][:250]
 
     ## original --> boolean
     music_metadata["original"] = data_slot.get("music", {}).get("original", None)

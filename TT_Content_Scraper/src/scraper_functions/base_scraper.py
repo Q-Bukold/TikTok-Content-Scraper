@@ -37,12 +37,13 @@ class BaseScraper():
             self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
             
     def request_and_retain_cookies(self, url, retain = True) -> requests.Response:
+            
             response = requests.get(url,
                     allow_redirects=True, # may have to set to True
                     headers=self.headers,
                     cookies=self.cookies,
                     timeout=20,
-                    stream=True)
+                    stream=False)
             
             # retain any new cookies that got set in this request
             if retain:
@@ -51,10 +52,22 @@ class BaseScraper():
             return response
 
     def scrape_metadata(self, video_id) -> dict:
-        response = self.request_and_retain_cookies(url=f"https://www.tiktok.com/@tiktok/video/{video_id}")
 
-        soup = BeautifulSoup(response.text, "html.parser")
-        script_tag = soup.find('script', id="__UNIVERSAL_DATA_FOR_REHYDRATION__")
+        retries = 0
+        script_tag = None
+        while script_tag is None and retries <= 3:
+            response = self.request_and_retain_cookies(url=f"https://www.tiktok.com/@tiktok/video/{video_id}")
+            soup = BeautifulSoup(response.text, "html.parser")
+            script_tag = soup.find('script', id="__UNIVERSAL_DATA_FOR_REHYDRATION__")
+
+            if script_tag is not None:
+                break # success
+            else:
+                retries += 1
+                time.sleep(0.1)
+        else:
+            if script_tag is None: raise KeyError("__UNIVERSAL_DATA_FOR_REHYDRATION__ not in response")
+
         data = json.loads(script_tag.string)
         metadata = data["__DEFAULT_SCOPE__"]["webapp.video-detail"]["itemInfo"]["itemStruct"]
         sorted_metadata = _filter_tiktok_data(data_slot=metadata)
@@ -118,7 +131,7 @@ class BaseScraper():
                 if links["mp3"]:
                     audio_binary = self._scrape_audio(links["mp3"])
                 if links["mp4"]:
-                    video_binary = self._scrape_video_binary(links["mp4"])
+                    video_binary = self._scrape_video(links["mp4"])
                 if links["jpegs"]:
                     metadata_images = links["jpegs"]
                     logger.info("-> is slide with {} pictures".format(len(metadata_images)))
@@ -134,45 +147,41 @@ class BaseScraper():
                 return {"mp3": audio_binary,
                         "mp4": video_binary,
                         "jpegs": picture_content_binary}
-            except requests.exceptions.ChunkedEncodingError:
-                logger.warning("ChunkedEncodingError - retrying max. 3 times with 0.5s sleep in between")
-                time.sleep(0.5)
+            except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError) as e:
+                logger.warning(f"{e} - retrying max. 3 times with 0.5s sleep in between")
+                time.sleep(0.1)
                 retries += 1
                 continue
+        
+        raise ConnectionError
 
 
-    def _scrape_video_binary(self, url):
+    def _scrape_video(self, url):
         # edited version of pyktok.save_tiktok() (https://github.com/dfreelon/pyktok)
         # download video content
-        try:
-            tt_video = self.request_and_retain_cookies(url, retain=False)
-        except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError):
-            logger.warning("Object could not be scraped, retry later...")
-            raise RetryLaterError
+        tt_video = self.request_and_retain_cookies(url, retain=False)
 
         # permission error
         if str(tt_video) == "<Response [403]>" or not tt_video:
                 url = url.replace("=tt_chain_token", "")
                 tt_video = self.request_and_retain_cookies(url, retain=False)
 
-        assert str(tt_video) != "<Response [403]>", ConnectionError
-        return tt_video.content
+        if str(tt_video) == "<Response [403]>":
+            raise ConnectionError
+        else:         
+            return tt_video.content
 
     def _scrape_picture(self, url):
         # request pictures
-        try:
-            tt_pic = self.request_and_retain_cookies(url, retain=False)
-        except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError):
-            logger.warning("Object could not be scraped, retry later...")
-            raise RetryLaterError
-        
-        return tt_pic.content
+        tt_pic = self.request_and_retain_cookies(url, retain=False)
+        if str(tt_pic) == "<Response [403]>":
+            raise ConnectionError
+        else: 
+            return tt_pic.content
             
     def _scrape_audio(self, url):
-        try:
-            tt_audio = self.request_and_retain_cookies(url, retain=False)
-        except (requests.exceptions.ChunkedEncodingError, ConnectionError, requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, ssl.SSLError, requests.exceptions.SSLError):
-            logger.warning("Object could not be scraped, retry later...")
-            raise RetryLaterError
-        
-        return tt_audio.content
+        tt_audio = self.request_and_retain_cookies(url, retain=False)
+        if str(tt_audio) == "<Response [403]>":
+            raise ConnectionError
+        else: 
+            return tt_audio.content

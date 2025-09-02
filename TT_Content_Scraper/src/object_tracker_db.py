@@ -20,11 +20,13 @@ class ObjectTracker:
     """Create an SQLite database that tracks whether an object (like a video id) was already processed or caused an error etc."""
     
     def __init__(self, db_file="object_progress.db"):
-        self.db_file = db_file
-        self.conn = None
-        self._connect()
-        self._create_tables()
-        self._create_indexes()
+
+        if db_file is not None:
+            self.db_file = db_file
+            self.conn = None
+            self._connect()
+            self._create_tables()
+            self._create_indexes()
     
     def _connect(self):
         """Establish connection to SQLite database."""
