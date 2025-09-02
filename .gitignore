@@ -11,3 +11,4 @@ test_data/
 test_folder/
 **toast.py
 db_connection.py
+*.db

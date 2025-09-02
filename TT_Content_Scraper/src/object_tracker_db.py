@@ -19,7 +19,9 @@ class ObjectStatus(Enum):
 class ObjectTracker:
     """Create an SQLite database that tracks whether an object (like a video id) was already processed or caused an error etc."""
     
-    def __init__(self, db_file="object_progress.db"):
+    def __init__(self, db_file="progress_tracking/scraping_progress.db"):
+        path_obj = Path(db_file)
+        path_obj.parent.mkdir(parents=True, exist_ok=True)
 
         if db_file is not None:
             self.db_file = db_file
