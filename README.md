@@ -18,9 +18,52 @@
 Clone this repository and install dependencies:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Q-Bukold/TikTok-Content-Scraper.git
 cd TT_Content_Scraper
 pip install -r requirements.txt
+```
+
+# Using the scraper via python script
+To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video.
+To scrape the metadata of a user, the TikTok username is required (with or without an @). It can be found in the URL of a user profile.
+
+Run the example_script.py to check out all basic functions.
+```python
+from TT_Content_Scraper import TT_Content_Scraper
+
+# Configure the scraper, this step is always needed
+scraper = TT_Content_Scraper(
+    wait_time=0.35,
+    output_files_fp="data/",
+    progress_file_fn="progress_tracking/scraping_progress.db",
+    clear_console=False # only works with mac and linux systems
+)
+
+# add content ids you want to scrape
+# caution! do not forget to set the "type" to "content"
+scraper.add_objects(ids=["7398323154424171806", "7447600730267061526"], title="from seedlist aug 20", type="content")
+
+# add usernames you want to scrape
+# caution! do not forget to set the "type" to "user"
+scraper.add_objects(ids=["tagesschau", "bundeskanzler"], title="from seedlist aug 20", type="user")
+
+# start scraping all objects you added that have not been scraped
+scraper.scrape_pending(scrape_files=True) # scrape_files indicated if you want to scrape the mp3/mp4/jpeg of all content.
+```
+
+The scrape_pending function provides a useful overview of your progress. 
+> Enable clear_console to clear the terminal output after every scrape. Note that clear_console does not work on Windows machines.
+``` text
+09-15/13:51;INFO :TTCS.DB   : Scraping ID: 7431135705826364704
+09-15/13:51;INFO :TTCS      : Scraped objects ► 309,376 / 2,979,827
+09-15/13:51;INFO :TTCS      : ...minus errors ► 259,564
+09-15/13:51;INFO :TTCS      : Iteration time ► 2.72 sec.
+09-15/13:51;INFO :TTCS      : ......averaged ► 2.52 sec.
+09-15/13:51;INFO :TTCS      : ETA ► 70 days 7:45:11
+---
+09-15/13:51;INFO :TTCS      : is slide with 17 pictures
+09-15/13:51;INFO :TTCS.DB   : ▼ JPEG saved to data/content_files/tiktok_picture_7431135705826364704_1.jpeg
+...
 ```
 
 # Using the scraper via the command line
@@ -221,58 +264,14 @@ The tracker maintains detailed information about each object:
 - Error messages and attempt counts
 - File paths for completed objects
 
-## Programming Interface
-
-You can also use the scraper programmatically:
-
-```python
-from TT_Content_Scraper import TT_Content_Scraper, ObjectTracker
-
-# Create scraper instance
-scraper = TT_Content_Scraper(
-    wait_time=0.35,
-    output_files_fp="data/",
-    progress_file_fn="progress.db"
-)
-
-# Add objects to track
-tracker = ObjectTracker("progress.db")
-tracker.add_objects(["123", "456"], type="content")
-
-# Start scraping
-scraper.scrape_pending(only_content=True, scrape_files=True)
-
-# Get statistics
-stats = tracker.get_stats("content")
-print(f"Completed: {stats['completed']}")
-```
-
-## Configuration
-
-### Default Settings
-- **Wait Time**: 0.35 seconds between requests
-- **Output Directory**: `data/`
-- **Progress Database**: `progress_tracking/scraping_progress.db`
-- **Console Clearing**: Disabled by default
-
-### Customizing Settings
-All settings can be customized via command-line options or when creating scraper instances programmatically.
-
-## Logging
-
-The scraper uses Python's logging module with different levels:
-- **INFO**: General progress information
-- **DEBUG**: Detailed operation information
-- **WARNING**: Non-fatal issues
-- **ERROR**: Error conditions
-
 ## Best Practices
 
-1. **Respect Rate Limits**: Use appropriate wait times to avoid being blocked
+1. **Respect Rate Limits**: Use appropriate wait times to avoid being blocked and avoid overloading TikTok's servers.
 2. **Backup Progress**: Regularly backup your progress database
 3. **Check Disk Space**: Monitor available disk space when downloading files
 
 ## Disclaimer
+This tool is for educational and research purposes in the EU only. Please respect the applicable regulations. If this work is used in an academic context it must be cited according to the information given on github or the weizenbaum institute library.
 
-This tool is for educational and research purposes in the EU only. Please respect the applicable regulations. Be responsible with scraping and avoid overloading TikTok's servers.
+> Bukold, Q. (2025). TikTok-Content-Scraper (Version X.X) [Computer software]. https://www.weizenbaum-library.de/handle/id/814
 ```
