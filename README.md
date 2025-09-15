@@ -14,7 +14,7 @@ The scraper is built as a Python class and can be inherited by a custom parent c
 Clone this repository and install dependencies:
 ```bash
 git clone https://github.com/Q-Bukold/TikTok-Content-Scraper.git
-cd TT_Content_Scraper
+cd TikTok_Content_Scraper
 pip install -r requirements.txt
 ```
 
