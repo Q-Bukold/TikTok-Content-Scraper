@@ -1,22 +1,17 @@
 # What is it?
 
-**This scraper allows you to download both TikTok videos and slides without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. The scraper is built as a Python class and can be inherited by a custom parent class, allowing for easy integration with databases or other systems.**
+**This scraper allows you to download TikTok user profiles, videos and slides without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. 
+The scraper is built as a Python class and can be inherited by a custom parent class, allowing for easy integration with databases or other systems.**
 
 ## Features
-
-- Download TikTok videos (mp4) and slides (jpeg's + mp3).
-- Scrape extensive metadata.
-- Customizable and extendable via inheritance.
-- Supports batch processing and progress tracking.
-- **Progress Tracking**: SQLite database tracks scraping progress, errors, and completion status
-- **CLI Interface**: Easy-to-use command-line interface with multiple commands
-- **Statistics**: Detailed progress statistics and reporting
-- **Rate Limiting**: Configurable wait times to respect API limits
+- Scrape extensive metadata on users and content (90+ elements)
+- Download TikTok videos (mp4) and slides (jpeg's + mp3)
+- Easy data management: SQLite database tracks scraping progress, errors, and completion status of all ID's
+- Use via command line: Easy-to-use command-line interface with multiple commands
 
 ## Installation
 
 Clone this repository and install dependencies:
-
 ```bash
 git clone https://github.com/Q-Bukold/TikTok-Content-Scraper.git
 cd TT_Content_Scraper
@@ -51,7 +46,7 @@ scraper.add_objects(ids=["tagesschau", "bundeskanzler"], title="from seedlist au
 scraper.scrape_pending(scrape_files=True) # scrape_files indicated if you want to scrape the mp3/mp4/jpeg of all content.
 ```
 
-The scrape_pending function provides a useful overview of your progress. 
+The scrape_pending function provides a useful overview of your progress: 
 > Enable clear_console to clear the terminal output after every scrape. Note that clear_console does not work on Windows machines.
 ``` text
 09-15/13:51;INFO :TTCS.DB   : Scraping ID: 7431135705826364704
@@ -65,7 +60,56 @@ The scrape_pending function provides a useful overview of your progress.
 09-15/13:51;INFO :TTCS.DB   : ▼ JPEG saved to data/content_files/tiktok_picture_7431135705826364704_1.jpeg
 ...
 ```
+## Progress Tracking
 
+The scraper uses an SQLite database to track progress:
+
+### Object Status Types
+- **Pending**: Objects waiting to be scraped
+- **Completed**: Successfully scraped objects
+- **Error**: Objects that failed during scraping
+
+### Database Schema
+The tracker maintains detailed information about each object:
+- Unique ID and type (content/user)
+- Current status and timestamps
+- Error messages and attempt counts
+- File paths for completed objects
+
+## Output Structure
+The scraper organizes output files as follows:
+
+```
+data/
+├── content_metadata/
+│   ├── 7123456789012345678.json
+│   ├── 7234567890123456789.json
+│   └── ...
+├── user_metadata/
+│   ├── max.json
+│   ├── john.json
+│   └── ...
+└── content_files/
+    ├── tiktok_7123456789012345678_video.mp4
+    ├── tiktok_7234567890123456789_slide0.jpeg
+    ├── tiktok_7234567890123456789_slide1.jpeg
+    ├── tiktok_7234567890123456789_audio.mp3
+    └── ...
+```
+
+## Best Practices
+
+1. **Respect Rate Limits**: Use appropriate wait times to avoid being blocked and avoid overloading TikTok's servers.
+2. **Backup Progress**: Regularly backup your progress database
+3. **Check Disk Space**: Monitor available disk space when downloading files
+
+## Disclaimer
+This tool is for educational and research purposes in the EU only. Please respect the applicable regulations. If this work is used in an academic context it must be cited according to the information given on github or the weizenbaum institute library.
+
+> Bukold, Q. (2025). TikTok-Content-Scraper (Version X.X) [Computer software]. https://www.weizenbaum-library.de/handle/id/814
+
+
+---
 # Using the scraper via the command line
 
 ## Quick Start
@@ -223,55 +267,4 @@ These options can be used with any command:
 **Example:**
 ```bash
 python -m TT_Content_Scraper --output-dir "my_data/" --wait-time 0.5 scrape --type content
-```
-
-## Output Structure
-
-The scraper organizes output files as follows:
-
-```
-data/
-├── content_metadata/
-│   ├── 7123456789012345678.json
-│   ├── 7234567890123456789.json
-│   └── ...
-├── user_metadata/
-│   ├── max.json
-│   ├── john.json
-│   └── ...
-└── content_files/
-    ├── tiktok_7123456789012345678_video.mp4
-    ├── tiktok_7234567890123456789_slide0.jpeg
-    ├── tiktok_7234567890123456789_slide1.jpeg
-    ├── tiktok_7234567890123456789_audio.mp3
-    └── ...
-```
-
-## Progress Tracking
-
-The scraper uses an SQLite database to track progress:
-
-### Object Status Types
-- **Pending**: Objects waiting to be scraped
-- **Completed**: Successfully scraped objects
-- **Error**: Objects that failed during scraping
-- **Retry**: Error objects reset for retry
-
-### Database Schema
-The tracker maintains detailed information about each object:
-- Unique ID and type (content/user)
-- Current status and timestamps
-- Error messages and attempt counts
-- File paths for completed objects
-
-## Best Practices
-
-1. **Respect Rate Limits**: Use appropriate wait times to avoid being blocked and avoid overloading TikTok's servers.
-2. **Backup Progress**: Regularly backup your progress database
-3. **Check Disk Space**: Monitor available disk space when downloading files
-
-## Disclaimer
-This tool is for educational and research purposes in the EU only. Please respect the applicable regulations. If this work is used in an academic context it must be cited according to the information given on github or the weizenbaum institute library.
-
-> Bukold, Q. (2025). TikTok-Content-Scraper (Version X.X) [Computer software]. https://www.weizenbaum-library.de/handle/id/814
 ```
