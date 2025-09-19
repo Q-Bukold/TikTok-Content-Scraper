@@ -107,7 +107,7 @@ The tracker maintains detailed information about each object:
 3. **Check Disk Space**: Monitor available disk space when downloading files
 
 ## Disclaimer
-This tool is for educational and research purposes in the EU only. Please respect the applicable regulations. If this work is used in an academic context it must be cited according to the information given in this repository or the Weizenbaum Institute library.
+This tool was build for educational and research purposes in the EU. Please respect the applicable regulations. If this work is used in an academic context it must be cited according to the information given in this repository or the Weizenbaum Institute library.
 
 > Bukold, Q. (2025). TikTok-Content-Scraper (Version X.X) [Computer software]. https://www.weizenbaum-library.de/handle/id/814
 
