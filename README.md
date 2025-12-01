@@ -1,6 +1,6 @@
 # What is it?
 
-This scraper allows you to download TikTok **user profiles**, **videos** and **slides** without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. It can also download the mp4 of videos and pictures as well as music of all slides. 
+This scraper allows you to download TikTok **user profiles**, **videos** and **slides** without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. It can also download the raw files of videos and slides. 
 
 You do not need your own progress tracking, the scraper takes care of everything - even common errors. It was built to scrape 1M+ IDs, but can also be used for smaller datasets. The scraped metadata is downloaded, but modifying the scraper can also allow you to connect it to a database.
 
