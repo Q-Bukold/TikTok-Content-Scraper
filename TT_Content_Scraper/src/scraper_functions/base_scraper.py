@@ -20,7 +20,8 @@ class RetryLaterError(Exception):
      pass
 
 class BaseScraper():
-    def __init__(self, browser_name = None):
+    def __init__(self, browser_name = None, proxy=None):
+        self.proxy = proxy
         self.headers = {
             'Accept-Encoding': 'gzip, deflate, sdch',
             'Accept-Language': 'en-US,en;q=0.8',
@@ -35,7 +36,11 @@ class BaseScraper():
 
         if browser_name:
             self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
-            
+    
+    def set_proxy(proxy) -> None:
+        self.proxy = proxy
+        return
+
     def request_and_retain_cookies(self, url, retain = True) -> requests.Response:
             
             response = requests.get(url,
@@ -43,7 +48,9 @@ class BaseScraper():
                     headers=self.headers,
                     cookies=self.cookies,
                     timeout=20,
-                    stream=False)
+                    stream=False,
+                    proxy=self.proxy
+            )
             
             # retain any new cookies that got set in this request
             if retain:
