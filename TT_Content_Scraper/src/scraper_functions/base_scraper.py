@@ -37,7 +37,7 @@ class BaseScraper():
         if browser_name:
             self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
     
-    def set_proxy(proxy) -> None:
+    def set_proxy(self, proxy) -> None:
         self.proxy = proxy
         return
 
