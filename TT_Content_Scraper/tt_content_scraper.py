@@ -21,10 +21,14 @@ class TT_Content_Scraper(ObjectTracker):
                 output_files_fp = "data/",
                 progress_file_fn = "progress_tracking/scraping_progress.db",
                 clear_console = False,
-                browser_name = None):
-        
+                browser_name = None,
+                proxy = None,
+    ):
         # initialize object tracker (database of pending and finished objects (ids))
         super().__init__(progress_file_fn)
+
+        if proxy:
+            base_scraper.set_proxy(proxy)
 
         # create output folder if doesnt exist
         Path(output_files_fp).mkdir(parents=True, exist_ok=True)
