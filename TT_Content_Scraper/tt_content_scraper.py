@@ -113,7 +113,7 @@ class TT_Content_Scraper(ObjectTracker):
                 binaries : dict = base_scraper.scrape_binaries(link_to_binaries)
             except ConnectionError as e:
                 logger.warning(f"ID {id} did not lead to any downloadable files - KeyError {e}")
-                self.mark_error(id=id)
+                self.mark_error(id, str(e))
                 self.n_errors_total += 1
                 self.n_pending -= 1
                 return None
