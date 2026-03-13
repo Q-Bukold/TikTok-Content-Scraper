@@ -49,7 +49,7 @@ class BaseScraper():
                     cookies=self.cookies,
                     timeout=20,
                     stream=False,
-                    proxy=self.proxy
+                    proxies=self.proxy
             )
             
             # retain any new cookies that got set in this request
