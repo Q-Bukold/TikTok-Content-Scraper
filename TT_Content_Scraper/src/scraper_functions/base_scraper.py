@@ -33,10 +33,10 @@ class BaseScraper():
             'referer' : 'https://www.tiktok.com/'
         }   
         self.cookies = dict()
-
-        if browser_name:
-            self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
     
+    def set_browser(self, browser_name) -> None:
+        self.cookies = getattr(browser_cookie3, browser_name)(domain_name='.tiktok.com')  # Inspired by pyktok
+
     def set_proxy(self, proxy) -> None:
         self.proxy = proxy
         return

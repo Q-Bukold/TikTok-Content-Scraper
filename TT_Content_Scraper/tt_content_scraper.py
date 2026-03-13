@@ -27,6 +27,9 @@ class TT_Content_Scraper(ObjectTracker):
         # initialize object tracker (database of pending and finished objects (ids))
         super().__init__(progress_file_fn)
 
+        if browser_name:
+            base_scraper.set_browser(browser_name)
+
         if proxy:
             base_scraper.set_proxy(proxy)
 
