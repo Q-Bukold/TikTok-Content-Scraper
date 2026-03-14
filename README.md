@@ -13,7 +13,7 @@ You do not need your own progress tracking, the scraper takes care of everything
 #### Disclaimer
 This tool was built for research purposes in the EU. Please respect the applicable regulations. If this work is used for your academic work, it must be cited according to the information given in this repository or the [Weizenbaum Institute](https://www.weizenbaum-library.de/handle/id/814) library. Not citing open-source software can be considered plagiarism.
 
-> Bukold, Q. (2025). TikTok-Content-Scraper (Version X.X) [Computer software]. https://www.weizenbaum-library.de/handle/id/814
+> Bukold, Q. (2025). TikTok-Content-Scraper (Version X.X) [Computer software]. Weizenbaum Institute. https://doi.org/10.34669/WI.RD/4
 
 # Installation
 
