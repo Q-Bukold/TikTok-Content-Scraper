@@ -1,8 +1,8 @@
 # What is it?
 
-This scraper allows you to download TikTok **user profiles**, **videos** and **slides** without an official API key. Additionally, it can scrape approximately 100 metadata fields related to the video, author, music, video file, and hashtags. It can also download the raw files of videos and slides. 
+This scraper allows you to download TikTok metadata for **user profiles**, **videos** and **slides** without an official API key. These metadata include 100 data elements related to the duration, hashtags, mentions, descriptions, music, format, and subscribers. It can also download the video or image files. 
 
-You do not need your own progress tracking, the scraper takes care of everything - even common errors. It was built to scrape 1M+ IDs, but can also be used for smaller datasets. The scraped metadata is downloaded, but modifying the scraper can also allow you to connect it to a database.
+The benefit of this scraper is, that you do not need your own progress tracking. The scraper tracks pending and finished IDs and usernames and even loggs common errors. It also tells you how long the process will take. It has been used by a number of research groups, scraping milions of profiles and videos - but can also be used for smaller datasets. The scraped metadata is downloaded as JSON, but modifying the scraper can also allow you to connect it to your own database.
 
 #### Features
 - Scrape extensive metadata on users and content (90+ elements)
@@ -26,10 +26,11 @@ Clone this repository and install dependencies with bash:
 # Using the scraper via Python script
 **Run the [example script](https://github.com/Q-Bukold/TikTok-Content-Scraper/blob/main/example_script.py) to check out all basic functions**. The scraper works in two steps; a) fill a progress database with your IDs and b) start the scraping progress and let the database manage your progress. 
 
-## Configuring the scraper (this step is always needed)
-1. Import the scraper in your Python file
+## Step 1: Configuring the scraper (this step is always needed)
+1. Import the scraper into your environment (`from TT_Content_Scraper import TT_Content_Scraper`) 
 2. Initialize the scraper with the paths and settings you want. The folders are created automatically.
-3. Every time you use the "scraper" object, it is now using these settings
+3. Every time you use the `scraper` object, it is now using these settings and the same database (here `progress_tracking/scraping_progress.db`).
+
 ```python
 from TT_Content_Scraper import TT_Content_Scraper
 
@@ -42,7 +43,7 @@ scraper = TT_Content_Scraper(
 ```
 We have now created the necessary output folders and initialized a database that tracks which IDs still need to be scraped or caused errors. The database is stored in the progress_file. If you delete this file, the database is also deleted. The wait time defines the seconds that the scraper waits between requests. Increase this time in case you get blocked by TikTok. The clear_console command gives you a nicer terminal output, but does not work on windows!
 
-## Adding ids of videos or slides you want to scrape
+## Step 2: Adding ids of videos or slides you want to scrape
 Now, we will fill our progress database with the videos and user IDs that we want to scrape. We only have to do this once! To reset the database delete the progress_file or execute the command ```scraper.clear_all_data()```. More commands to reset all IDs to pending, get the database statistics or reset the IDs marked as errors can be found in the [object tracker](https://github.com/Q-Bukold/TikTok-Content-Scraper/blob/main/TT_Content_Scraper/src/object_tracker_db.py) file.
 
 To scrape the metadata and content of a video, the TikTok ID is required. It can be found in the URL of a video. To scrape the metadata of a user, the TikTok username is required (with or without an @). It can be found in the URL of a user profile.
@@ -59,7 +60,7 @@ Add usernames:
 scraper.add_objects(ids=["tagesschau", "bundeskanzler"], title="from seedlist aug 20", type="user")
 ```
 
-## Start scraping all objects you added that have not been scraped (pending objects)
+## Step 3: Start scraping all objects you added that have not been scraped (pending objects)
 All IDs you have previously added are now permanently stored in the progress database as pending, even if you restart your server. To start the scraping process, execute the code below. The database will track the IDs that a) caused an **error**, b) are **completed** and c) are still **pending**. 
 
 The ```scrape_pending``` function has multiple arguments. Use ```only_content=True``` to only scrape IDs marked as content and ```only_users=True``` to only scrape IDs marked as belonging to a user. If both arguments are false, both types are scraped. By default, the scraper only scrapes the metadata, turn on ```scrape_files = True``` to also scrape the mp3/mp4/jpegs or the slides and videos.
@@ -105,10 +106,10 @@ data/
 │   ├── john.json
 │   └── ...
 └── content_files/
-    ├── tiktok_7123456789012345678_video.mp4
-    ├── tiktok_7234567890123456789_slide0.jpeg
-    ├── tiktok_7234567890123456789_slide1.jpeg
-    ├── tiktok_7234567890123456789_audio.mp3
+    ├── tiktok_video_7123456789012345678.mp4
+    ├── tiktok_picture_7234567890123456789_0.jpeg
+    ├── tiktok_picture_7234567890123456789_1.jpeg
+    ├── tiktok_audio_7234567890123456789.mp3
     └── ...
 ```
 
