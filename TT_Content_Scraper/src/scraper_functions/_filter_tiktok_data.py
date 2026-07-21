@@ -158,7 +158,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["index_enabled"] = data_slot.get("indexEnabled", False) # Not in metadata seems to mean FALSE
     ## diversification_labels --> character varying(250)[]
     video_metadata["diversification_labels"] = data_slot.get("diversificationLabels", None)
-    if video_metadata["diversification_labels"] and len(video_metadata["diversification_labels"]) == 0:
+    if video_metadata["diversification_labels"] is not None and len(video_metadata["diversification_labels"]) == 0:
         video_metadata["diversification_labels"] = None
     ## diversification_id --> bigint
     video_metadata["diversification_id"] = data_slot.get("diversificationId", None)
