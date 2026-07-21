@@ -132,7 +132,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["take_down"] = data_slot.get("takeDown", None)
     ## effect_stickers --> character varying(250)[]
     video_metadata["effect_stickers"] = data_slot.get("effectStickers", None)
-    if video_metadata["effect_stickers"] and len(video_metadata["effect_stickers"]) == 0:
+    if video_metadata["effect_stickers"] is not None and len(video_metadata["effect_stickers"]) == 0:
         video_metadata["effect_stickers"] = None
     ## private_item --> boolean
     video_metadata["private_item"] = data_slot.get("privateItem", None)
