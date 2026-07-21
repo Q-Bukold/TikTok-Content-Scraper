@@ -142,7 +142,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["stitch_enabled"] = data_slot.get("stitchEnabled", False) # Not in metadata seems to mean FALSE
     ## stickers_on_item --> character varying(250)[]
     video_metadata["stickers_on_item"] = data_slot.get("stickersOnItem", None)
-    if video_metadata["stickers_on_item"] and len(video_metadata["stickers_on_item"]) == 0:
+    if video_metadata["stickers_on_item"] is not None and len(video_metadata["stickers_on_item"]) == 0:
         video_metadata["stickers_on_item"] = None
     ## share_enabled --> boolean
     video_metadata["share_enabled"] = data_slot.get("shareEnabled", None)
