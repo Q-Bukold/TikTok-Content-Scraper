@@ -148,7 +148,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["share_enabled"] = data_slot.get("shareEnabled", None)
     ## comments --> character varying(250)[]
     video_metadata["comments"] = data_slot.get("comments", None)
-    if video_metadata["comments"] and len(video_metadata["comments"]) == 0:
+    if video_metadata["comments"] is not None and len(video_metadata["comments"]) == 0:
         video_metadata["comments"] = None
     ## duet_display --> integer
     video_metadata["duet_display"] = data_slot.get("duetDisplay", None)
