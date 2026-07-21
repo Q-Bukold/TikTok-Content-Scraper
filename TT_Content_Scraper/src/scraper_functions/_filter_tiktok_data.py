@@ -176,7 +176,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["keyword_tags"] = data_slot.get("keywordTags", None)
     ## is_ai_gc --> boolean
     video_metadata["is_ai_gc"] = data_slot.get("IsAigc", None)
-    ## aigcLabelType --> integer
+    ## moderationAigcLabelType --> integer
     video_metadata["aigc_label_type"] = data_slot.get("moderationAigcLabelType", None)
     ## ai_gc_description --> text
     video_metadata["ai_gc_description"] = data_slot.get("AIGCDescription", None)
