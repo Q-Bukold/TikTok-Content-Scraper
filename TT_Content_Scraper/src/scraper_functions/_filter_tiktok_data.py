@@ -14,6 +14,8 @@ def _force_to_int(value):
 def _prep_hashtags_and_mentions(data_slot):
     text_elements = data_slot.get("textExtra", None)
     challenges = data_slot.get("challenges", None)
+    if challenges is None:
+        challenges = []
 
     hashtags_metadata = []
     mentions_list = []
@@ -29,10 +31,13 @@ def _prep_hashtags_and_mentions(data_slot):
                 hashtag_data["sub_type"] = element.get("subType", None)
                 hashtag_data["is_commerce"] = element.get("isCommerce", None)
 
-                matching_callenge = list(filter(lambda x : _force_to_int(x["id"]) == hashtag_data["id"], challenges))
+                matching_callenge = []
+                if hashtag_data["id"] is not None: # without an id we cannot match, and None == None would match wrongly
+                    matching_callenge = list(filter(lambda x : _force_to_int(x.get("id", None)) == hashtag_data["id"], challenges))
+
                 if matching_callenge:
                     matching_callenge = matching_callenge[0]
-                    hashtag_data["description"] = matching_callenge["desc"]
+                    hashtag_data["description"] = matching_callenge.get("desc", None)
                 else:
                     hashtag_data["description"] = None
 
@@ -51,7 +56,11 @@ def _filter_tiktok_data(data_slot):
     ## id --> bigint NOT NULL
     video_metadata["id"] = _force_to_int(data_slot.get("id", None)) #ID of the specific video
     ## time_created --> timestamp without time zone,
-    video_metadata["time_created"] = datetime.fromtimestamp(int(data_slot.get("createTime", None))).isoformat()
+    create_time = _force_to_int(data_slot.get("createTime", None))
+    if create_time is not None:
+        video_metadata["time_created"] = datetime.fromtimestamp(create_time).isoformat()
+    else:
+        video_metadata["time_created"] = None
     ## author_id --> bigint
     video_metadata["author_id"] = _force_to_int(data_slot.get("author", {}).get("id", None))
     ## description --> text
@@ -79,7 +88,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["is_ad"] = data_slot.get("isAd", False) # Not in metadata seems to mean FALSE
     ## suggested_words --> character varying(250)[]
     video_metadata["suggested_words"] = data_slot.get("suggestedWords", None)
-    if video_metadata["suggested_words"] and len(video_metadata["suggested_words"]) == 0:
+    if video_metadata["suggested_words"] is not None and len(video_metadata["suggested_words"]) == 0:
         video_metadata["suggested_words"] = None
 
     ## statistics for video metadata
@@ -132,7 +141,7 @@ def _filter_tiktok_data(data_slot):
     video_metadata["take_down"] = data_slot.get("takeDown", None)
     ## effect_stickers --> character varying(250)[]
     video_metadata["effect_stickers"] = data_slot.get("effectStickers", None)
-    if len(video_metadata["effect_stickers"]) == 0:
+    if video_metadata["effect_stickers"] is not None and len(video_metadata["effect_stickers"]) == 0:
         video_metadata["effect_stickers"] = None
     ## private_item --> boolean
     video_metadata["private_item"] = data_slot.get("privateItem", None)
@@ -142,13 +151,13 @@ def _filter_tiktok_data(data_slot):
     video_metadata["stitch_enabled"] = data_slot.get("stitchEnabled", False) # Not in metadata seems to mean FALSE
     ## stickers_on_item --> character varying(250)[]
     video_metadata["stickers_on_item"] = data_slot.get("stickersOnItem", None)
-    if len(video_metadata["stickers_on_item"]) == 0:
+    if video_metadata["stickers_on_item"] is not None and len(video_metadata["stickers_on_item"]) == 0:
         video_metadata["stickers_on_item"] = None
     ## share_enabled --> boolean
     video_metadata["share_enabled"] = data_slot.get("shareEnabled", None)
     ## comments --> character varying(250)[]
     video_metadata["comments"] = data_slot.get("comments", None)
-    if len(video_metadata["comments"]) == 0:
+    if video_metadata["comments"] is not None and len(video_metadata["comments"]) == 0:
         video_metadata["comments"] = None
     ## duet_display --> integer
     video_metadata["duet_display"] = data_slot.get("duetDisplay", None)
@@ -158,24 +167,32 @@ def _filter_tiktok_data(data_slot):
     video_metadata["index_enabled"] = data_slot.get("indexEnabled", False) # Not in metadata seems to mean FALSE
     ## diversification_labels --> character varying(250)[]
     video_metadata["diversification_labels"] = data_slot.get("diversificationLabels", None)
-    if video_metadata["diversification_labels"] and len(video_metadata["diversification_labels"]) == 0:
+    if video_metadata["diversification_labels"] is not None and len(video_metadata["diversification_labels"]) == 0:
         video_metadata["diversification_labels"] = None
     ## diversification_id --> bigint
     video_metadata["diversification_id"] = data_slot.get("diversificationId", None)
+    ## CategoryType --> bigint
+    video_metadata["category_type"] = data_slot.get("CategoryType", None)
+    ## text_language --> character varying(10)
+    video_metadata["text_language"] = data_slot.get("textLanguage", None)
+    ## content_location --> json
+    video_metadata["content_location"] = data_slot.get("contentLocation", None)
     ## channel_tags --> character varying(250)[]
     video_metadata["channel_tags"] = data_slot.get("channelTags", None) # is it really tied to the author?
-    if video_metadata["channel_tags"] == {}:
+    if video_metadata["channel_tags"] is not None and len(video_metadata["channel_tags"]) == 0:
         video_metadata["channel_tags"] = None
     ## keyword_tags --> json[]
     video_metadata["keyword_tags"] = data_slot.get("keywordTags", None)
     ## is_ai_gc --> boolean
     video_metadata["is_ai_gc"] = data_slot.get("IsAigc", None)
-    ## aigcLabelType --> integer
-    video_metadata["aigc_label_type"] = data_slot.get("aigcLabelType", None)
+    ## moderationAigcLabelType --> integer
+    video_metadata["aigc_label_type"] = data_slot.get("moderationAigcLabelType", None)
     ## ai_gc_description --> text
     video_metadata["ai_gc_description"] = data_slot.get("AIGCDescription", None)
     if video_metadata["ai_gc_description"] == '':
         video_metadata["ai_gc_description"] = None
+    ## creator_ai_comment --> json
+    video_metadata["creator_ai_comment"] = data_slot.get("creatorAIComment", None)
 
     # ---
 
@@ -193,10 +210,10 @@ def _filter_tiktok_data(data_slot):
     file_metadata["width"] = data_slot.get("video", {}).get("width", None)
     ## ratio --> integer
     file_metadata["ratio"] = data_slot.get("video", {}).get("ratio", None) #in p
-    if file_metadata["ratio"]:
-        file_metadata["ratio"] = _force_to_int(file_metadata["ratio"][:-1]) # 540p -> 540
+    if isinstance(file_metadata["ratio"], str):
+        file_metadata["ratio"] = _force_to_int(file_metadata["ratio"].rstrip("p")) # 540p -> 540
     else:
-        file_metadata["ratio"] = None
+        file_metadata["ratio"] = _force_to_int(file_metadata["ratio"]) # already numeric, or None
     ## volume_loudness --> numeric(3, 1)
     file_metadata["volume_loudness"] = data_slot.get("video", {}).get("volumeInfo", {}).get("Loudness", None)
     ## volume_peak --> numeric(6, 5)
