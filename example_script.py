@@ -9,7 +9,7 @@ scraper = TT_Content_Scraper(
 )
 
 # add content ids you want to scrape (you only have to do this step once, the progress database retains your IDs)
-scraper.add_objects(ids=["7398323154424171806", "7447600730267061526"], title="from seedlist aug 20", type="content")
+scraper.add_objects(ids=["7398323154424171806", "7554738894600686870"], title="from seedlist aug 20", type="content")
 
 # add usernames you want to scrape (you only have to do this step once, the progress database retains your IDs)
 scraper.add_objects(ids=["tagesschau", "bundeskanzler"], title="from seedlist aug 20", type="user")
