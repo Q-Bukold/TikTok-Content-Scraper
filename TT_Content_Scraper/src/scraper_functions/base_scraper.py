@@ -114,17 +114,28 @@ class BaseScraper():
         """
         if "@" in username:
             username = str.replace(username, "@", "")
-        
-        response = self.request_and_retain_cookies(url=f"https://www.tiktok.com/@{username}")
-        
-        soup = BeautifulSoup(response.text, "html.parser")
-        rehydration_data = soup.find('script', attrs={'id':"__UNIVERSAL_DATA_FOR_REHYDRATION__"})
+
+        retries = 0
+        rehydration_data = None
+        while rehydration_data is None and retries <= 3:
+            response = self.request_and_retain_cookies(url=f"https://www.tiktok.com/@{username}")
+            soup = BeautifulSoup(response.text, "html.parser")
+            rehydration_data = soup.find('script', attrs={'id': "__UNIVERSAL_DATA_FOR_REHYDRATION__"})
+
+            if rehydration_data is not None:
+                break  # success
+            else:
+                retries += 1
+                time.sleep(0.1)
+        else:
+            if rehydration_data is None:
+                raise KeyError("__UNIVERSAL_DATA_FOR_REHYDRATION__ not in response")
 
         rehydration_data_json = json.loads(rehydration_data.string)
 
         # filtering html data
         user_data = rehydration_data_json["__DEFAULT_SCOPE__"]["webapp.user-detail"]["userInfo"]
-        
+
         return user_data
 
     def scrape_binaries(self, links) -> dict:
