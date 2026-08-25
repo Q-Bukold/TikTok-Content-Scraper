@@ -94,10 +94,20 @@ class TT_Content_Scraper(ObjectTracker):
     def _user_action_protocol(self, id):
         filepath = os.path.join(self.output_files_fp, "user_metadata/", f"{id}.json")
         Path(self.output_files_fp, "user_metadata/").mkdir(parents=True, exist_ok=True)
-        user_data = base_scraper.scrape_user(id)
+
+        try:
+            user_data = base_scraper.scrape_user(id)
+        except (KeyError, AttributeError) as e:
+            logger.warning(f"ID {id} did not lead to any metadata - {type(e).__name__} {e}")
+            self.mark_error(id, str(e))
+            self.n_errors_total += 1
+            self.n_pending -= 1
+            return None
+
         self._write_metadata_package(user_data, filepath)
         self.mark_completed(id, filepath)
         self.n_scraped_total += 1
+        self.n_pending -= 1
 
     def _content_action_protocol(self, id, scrape_files):
         filepath = os.path.join(self.output_files_fp, "content_metadata/", f"{id}.json")
