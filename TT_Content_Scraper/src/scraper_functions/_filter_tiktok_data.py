@@ -86,6 +86,9 @@ def _filter_tiktok_data(data_slot):
             video_metadata["location_created"] = None
     ## is_ad --> boolean
     video_metadata["is_ad"] = data_slot.get("isAd", False) # Not in metadata seems to mean FALSE
+    ## is_ecommerce_video --> integer (e-commerce video marker); omit if not present
+    if "isECVideo" in data_slot:
+        video_metadata["is_ecommerce_video"] = data_slot.get("isECVideo")
     ## suggested_words --> character varying(250)[]
     video_metadata["suggested_words"] = data_slot.get("suggestedWords", None)
     if video_metadata["suggested_words"] is not None and len(video_metadata["suggested_words"]) == 0:
